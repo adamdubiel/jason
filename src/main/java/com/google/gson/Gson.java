@@ -247,7 +247,7 @@ public final class Gson {
     if (serializeSpecialFloatingPointValues) {
       return TypeAdapters.DOUBLE;
     }
-    return new TypeAdapter<Number>() {
+    return new SimpleTypeAdapter<Number>() {
       @Override public Double read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
           in.nextNull();
@@ -271,7 +271,7 @@ public final class Gson {
     if (serializeSpecialFloatingPointValues) {
       return TypeAdapters.FLOAT;
     }
-    return new TypeAdapter<Number>() {
+    return new SimpleTypeAdapter<Number>() {
       @Override public Float read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
           in.nextNull();
@@ -303,7 +303,7 @@ public final class Gson {
     if (longSerializationPolicy == LongSerializationPolicy.DEFAULT) {
       return TypeAdapters.LONG;
     }
-    return new TypeAdapter<Number>() {
+    return new SimpleTypeAdapter<Number>() {
       @Override public Number read(JsonReader in) throws IOException {
         if (in.peek() == JsonToken.NULL) {
           in.nextNull();
@@ -408,7 +408,7 @@ public final class Gson {
    *  }</pre>
    *  Note that since you can not override type adapter factories for String and Java primitive
    *  types, our stats factory will not count the number of String or primitives that will be
-   *  read or written. 
+   *  read or written.
    * @param skipPast The type adapter factory that needs to be skipped while searching for
    *   a matching type adapter. In most cases, you should just pass <i>this</i> (the type adapter
    *   factory from where {@link #getDelegateAdapter} method is being invoked).
@@ -575,13 +575,16 @@ public final class Gson {
     }
   }
 
+  public void toJson(Object src, Type typeOfSrc, JsonWriter writer) throws JsonIOException {
+      toJson(src, typeOfSrc, writer, new EmptyRuntimeExclusionStrategy());
+  }
   /**
    * Writes the JSON representation of {@code src} of type {@code typeOfSrc} to
    * {@code writer}.
    * @throws JsonIOException if there was a problem writing to the writer
    */
   @SuppressWarnings("unchecked")
-  public void toJson(Object src, Type typeOfSrc, JsonWriter writer) throws JsonIOException {
+  public void toJson(Object src, Type typeOfSrc, JsonWriter writer, RuntimeExclusionStrategy runtimeExclusion) throws JsonIOException {
     TypeAdapter<?> adapter = getAdapter(TypeToken.get(typeOfSrc));
     boolean oldLenient = writer.isLenient();
     writer.setLenient(true);
@@ -590,7 +593,7 @@ public final class Gson {
     boolean oldSerializeNulls = writer.getSerializeNulls();
     writer.setSerializeNulls(serializeNulls);
     try {
-      ((TypeAdapter<Object>) adapter).write(writer, src);
+      ((TypeAdapter<Object>) adapter).write(writer, src, runtimeExclusion);
     } catch (IOException e) {
       throw new JsonIOException(e);
     } finally {
@@ -646,11 +649,14 @@ public final class Gson {
     return jsonWriter;
   }
 
+  public void toJson(JsonElement jsonElement, JsonWriter writer) throws JsonIOException {
+      toJson(jsonElement, writer, new EmptyRuntimeExclusionStrategy());
+  }
   /**
    * Writes the JSON for {@code jsonElement} to {@code writer}.
    * @throws JsonIOException if there was a problem writing to the writer
    */
-  public void toJson(JsonElement jsonElement, JsonWriter writer) throws JsonIOException {
+  public void toJson(JsonElement jsonElement, JsonWriter writer, RuntimeExclusionStrategy exclusionStrategy) throws JsonIOException {
     boolean oldLenient = writer.isLenient();
     writer.setLenient(true);
     boolean oldHtmlSafe = writer.isHtmlSafe();
@@ -658,7 +664,7 @@ public final class Gson {
     boolean oldSerializeNulls = writer.getSerializeNulls();
     writer.setSerializeNulls(serializeNulls);
     try {
-      Streams.write(jsonElement, writer);
+      Streams.write(jsonElement, writer, exclusionStrategy);
     } catch (IOException e) {
       throw new JsonIOException(e);
     } finally {
@@ -885,11 +891,11 @@ public final class Gson {
       return delegate.read(in);
     }
 
-    @Override public void write(JsonWriter out, T value) throws IOException {
+    @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
       if (delegate == null) {
         throw new IllegalStateException();
       }
-      delegate.write(out, value);
+      delegate.write(out, value, exclusionStrategy);
     }
   }
 

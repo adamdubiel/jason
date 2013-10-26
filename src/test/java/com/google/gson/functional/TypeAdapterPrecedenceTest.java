@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -137,7 +138,7 @@ public final class TypeAdapterPrecedenceTest extends TestCase {
   }
 
   private TypeAdapter<Foo> newTypeAdapter(final String name) {
-    return new TypeAdapter<Foo>() {
+    return new SimpleTypeAdapter<Foo>() {
       @Override public Foo read(JsonReader in) throws IOException {
         return new Foo(in.nextString() + " via " + name);
       }

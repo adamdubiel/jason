@@ -36,13 +36,13 @@ public final class ObjectTypeAdapterTest extends TestCase {
 
   public void testSerialize() throws Exception {
     Object object = new RuntimeType();
-    assertEquals("{'a':5,'b':[1,2,null]}", adapter.toJson(object).replace("\"", "'"));
+    assertEquals("{'a':5,'b':[1,2,null]}", adapter.toJson(object, new EmptyRuntimeExclusionStrategy()).replace("\"", "'"));
   }
-  
+
   public void testSerializeNullValue() throws Exception {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("a", null);
-    assertEquals("{'a':null}", adapter.toJson(map).replace('"', '\''));
+    assertEquals("{'a':null}", adapter.toJson(map, new EmptyRuntimeExclusionStrategy()).replace('"', '\''));
   }
 
   public void testDeserializeNullValue() throws Exception {
@@ -52,7 +52,7 @@ public final class ObjectTypeAdapterTest extends TestCase {
   }
 
   public void testSerializeObject() throws Exception {
-    assertEquals("{}", adapter.toJson(new Object()));
+    assertEquals("{}", adapter.toJson(new Object(), new EmptyRuntimeExclusionStrategy()));
   }
 
   @SuppressWarnings("unused")

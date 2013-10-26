@@ -17,6 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -85,7 +86,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
       return collection;
     }
 
-    public void write(JsonWriter out, Collection<E> collection) throws IOException {
+    public void write(JsonWriter out, Collection<E> collection, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
       if (collection == null) {
         out.nullValue();
         return;
@@ -93,7 +94,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
 
       out.beginArray();
       for (E element : collection) {
-        elementTypeAdapter.write(out, element);
+        elementTypeAdapter.write(out, element, exclusionStrategy);
       }
       out.endArray();
     }

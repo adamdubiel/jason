@@ -53,6 +53,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -86,20 +87,20 @@ public class DefaultTypeAdaptersTest extends TestCase {
 
   public void testClassSerialization() {
     try {
-      gson.toJson(String.class);  
+      gson.toJson(String.class);
     } catch (UnsupportedOperationException expected) {}
     // Override with a custom type adapter for class.
     gson = new GsonBuilder().registerTypeAdapter(Class.class, new MyClassTypeAdapter()).create();
-    assertEquals("\"java.lang.String\"", gson.toJson(String.class));  
+    assertEquals("\"java.lang.String\"", gson.toJson(String.class));
   }
 
   public void testClassDeserialization() {
     try {
-      gson.fromJson("String.class", String.class.getClass());  
+      gson.fromJson("String.class", String.class.getClass());
     } catch (UnsupportedOperationException expected) {}
     // Override with a custom type adapter for class.
     gson = new GsonBuilder().registerTypeAdapter(Class.class, new MyClassTypeAdapter()).create();
-    assertEquals(String.class, gson.fromJson("java.lang.String", Class.class));  
+    assertEquals(String.class, gson.fromJson("java.lang.String", Class.class));
   }
 
   public void testUrlSerialization() throws Exception {
@@ -145,7 +146,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
     URI target = gson.fromJson(json, URI.class);
     assertEquals(uriValue, target.toASCIIString());
   }
-  
+
   public void testNullSerialization() throws Exception {
     testNullSerializationAndDeserialization(Boolean.class);
     testNullSerializationAndDeserialization(Byte.class);
@@ -268,7 +269,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
     ClassWithBigInteger actual = gson.fromJson(json, ClassWithBigInteger.class);
     assertEquals(expected.value, actual.value);
   }
-  
+
   public void testOverrideBigIntegerTypeAdapter() throws Exception {
     gson = new GsonBuilder()
         .registerTypeAdapter(BigInteger.class, new NumberAsStringAdapter(BigInteger.class))
@@ -689,7 +690,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
   }
 
   @SuppressWarnings("rawtypes")
-  private static class MyClassTypeAdapter extends TypeAdapter<Class> {
+  private static class MyClassTypeAdapter extends SimpleTypeAdapter<Class> {
     @Override
     public void write(JsonWriter out, Class value) throws IOException {
       out.value(value.getName());
@@ -705,7 +706,7 @@ public class DefaultTypeAdaptersTest extends TestCase {
     }
   }
 
-  static class NumberAsStringAdapter extends TypeAdapter<Number> {
+  static class NumberAsStringAdapter extends SimpleTypeAdapter<Number> {
     private final Constructor<? extends Number> constructor;
     NumberAsStringAdapter(Class<? extends Number> type) throws Exception {
       this.constructor = type.getConstructor(String.class);

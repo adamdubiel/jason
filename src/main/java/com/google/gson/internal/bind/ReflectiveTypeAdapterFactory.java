@@ -19,6 +19,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.SerializedName;
@@ -69,7 +70,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     }
 
     ObjectConstructor<T> constructor = constructorConstructor.get(type);
-    return new Adapter<T>(constructor, getBoundFields(gson, type, raw));
+    return new Adapter<T>(constructor, getBoundFields(gson, type, raw), type);
   }
 
   private ReflectiveTypeAdapterFactory.BoundField createBoundField(
@@ -81,12 +82,12 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     return new ReflectiveTypeAdapterFactory.BoundField(name, serialize, deserialize) {
       final TypeAdapter<?> typeAdapter = context.getAdapter(fieldType);
       @SuppressWarnings({"unchecked", "rawtypes"}) // the type adapter and field type always agree
-      @Override void write(JsonWriter writer, Object value)
+      @Override void write(JsonWriter writer, Object value, RuntimeExclusionStrategy exclusionStrategy)
           throws IOException, IllegalAccessException {
         Object fieldValue = field.get(value);
         TypeAdapter t =
           new TypeAdapterRuntimeTypeWrapper(context, this.typeAdapter, fieldType.getType());
-        t.write(writer, fieldValue);
+        t.write(writer, fieldValue, exclusionStrategy);
       }
       @Override void read(JsonReader reader, Object value)
           throws IOException, IllegalAccessException {
@@ -140,17 +141,19 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       this.deserialized = deserialized;
     }
 
-    abstract void write(JsonWriter writer, Object value) throws IOException, IllegalAccessException;
+    abstract void write(JsonWriter writer, Object value, RuntimeExclusionStrategy exclusionStrategy) throws IOException, IllegalAccessException;
     abstract void read(JsonReader reader, Object value) throws IOException, IllegalAccessException;
   }
 
   public static final class Adapter<T> extends TypeAdapter<T> {
     private final ObjectConstructor<T> constructor;
     private final Map<String, BoundField> boundFields;
+    private final TypeToken<T> type;
 
-    private Adapter(ObjectConstructor<T> constructor, Map<String, BoundField> boundFields) {
+    private Adapter(ObjectConstructor<T> constructor, Map<String, BoundField> boundFields, TypeToken<T> type) {
       this.constructor = constructor;
       this.boundFields = boundFields;
+      this.type = type;
     }
 
     @Override public T read(JsonReader in) throws IOException {
@@ -181,7 +184,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       return instance;
     }
 
-    @Override public void write(JsonWriter out, T value) throws IOException {
+    @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
       if (value == null) {
         out.nullValue();
         return;
@@ -190,9 +193,9 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       out.beginObject();
       try {
         for (BoundField boundField : boundFields.values()) {
-          if (boundField.serialized) {
+          if (boundField.serialized && !exclusionStrategy.skipField(type, boundField.name)) {
             out.name(boundField.name);
-            boundField.write(out, value);
+            boundField.write(out, value, exclusionStrategy);
           }
         }
       } catch (IllegalAccessException e) {

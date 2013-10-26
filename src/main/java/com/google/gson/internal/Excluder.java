@@ -19,6 +19,7 @@ package com.google.gson.internal;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.Expose;
@@ -129,12 +130,12 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
         return delegate().read(in);
       }
 
-      @Override public void write(JsonWriter out, T value) throws IOException {
+      @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
         if (skipSerialize) {
           out.nullValue();
           return;
         }
-        delegate().write(out, value);
+        delegate().write(out, value, exclusionStrategy);
       }
 
       private TypeAdapter<T> delegate() {

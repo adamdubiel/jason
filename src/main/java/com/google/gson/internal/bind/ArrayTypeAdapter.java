@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -81,7 +82,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
   }
 
   @SuppressWarnings("unchecked")
-  @Override public void write(JsonWriter out, Object array) throws IOException {
+  @Override public void write(JsonWriter out, Object array, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
     if (array == null) {
       out.nullValue();
       return;
@@ -90,7 +91,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
     out.beginArray();
     for (int i = 0, length = Array.getLength(array); i < length; i++) {
       E value = (E) Array.get(array, i);
-      componentTypeAdapter.write(out, value);
+      componentTypeAdapter.write(out, value, exclusionStrategy);
     }
     out.endArray();
   }

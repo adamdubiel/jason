@@ -18,6 +18,7 @@ package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
@@ -82,7 +83,7 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
     }
   }
 
-  @Override public synchronized void write(JsonWriter out, Date value) throws IOException {
+  @Override public synchronized void write(JsonWriter out, Date value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
     if (value == null) {
       out.nullValue();
       return;

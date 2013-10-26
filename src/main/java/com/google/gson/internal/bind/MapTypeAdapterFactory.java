@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -195,7 +196,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       return map;
     }
 
-    public void write(JsonWriter out, Map<K, V> map) throws IOException {
+    public void write(JsonWriter out, Map<K, V> map, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
       if (map == null) {
         out.nullValue();
         return;
@@ -205,7 +206,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         out.beginObject();
         for (Map.Entry<K, V> entry : map.entrySet()) {
           out.name(String.valueOf(entry.getKey()));
-          valueTypeAdapter.write(out, entry.getValue());
+          valueTypeAdapter.write(out, entry.getValue(), exclusionStrategy);
         }
         out.endObject();
         return;
@@ -216,7 +217,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
 
       List<V> values = new ArrayList<V>(map.size());
       for (Map.Entry<K, V> entry : map.entrySet()) {
-        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey());
+        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey(), exclusionStrategy);
         keys.add(keyElement);
         values.add(entry.getValue());
         hasComplexKeys |= keyElement.isJsonArray() || keyElement.isJsonObject();
@@ -226,8 +227,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         out.beginArray();
         for (int i = 0; i < keys.size(); i++) {
           out.beginArray(); // entry array
-          Streams.write(keys.get(i), out);
-          valueTypeAdapter.write(out, values.get(i));
+          Streams.write(keys.get(i), out, exclusionStrategy);
+          valueTypeAdapter.write(out, values.get(i), exclusionStrategy);
           out.endArray();
         }
         out.endArray();
@@ -236,7 +237,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         for (int i = 0; i < keys.size(); i++) {
           JsonElement keyElement = keys.get(i);
           out.name(keyToString(keyElement));
-          valueTypeAdapter.write(out, values.get(i));
+          valueTypeAdapter.write(out, values.get(i), exclusionStrategy);
         }
         out.endObject();
       }

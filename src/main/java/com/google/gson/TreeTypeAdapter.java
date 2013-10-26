@@ -58,9 +58,9 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     return deserializer.deserialize(value, typeToken.getType(), gson.deserializationContext);
   }
 
-  @Override public void write(JsonWriter out, T value) throws IOException {
+  @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
     if (serializer == null) {
-      delegate().write(out, value);
+      delegate().write(out, value, exclusionStrategy);
       return;
     }
     if (value == null) {
@@ -68,7 +68,7 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
       return;
     }
     JsonElement tree = serializer.serialize(value, typeToken.getType(), gson.serializationContext);
-    Streams.write(tree, out);
+    Streams.write(tree, out, exclusionStrategy);
   }
 
   private TypeAdapter<T> delegate() {

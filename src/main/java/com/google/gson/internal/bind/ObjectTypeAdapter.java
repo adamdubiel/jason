@@ -17,6 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;
@@ -91,7 +92,7 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
   }
 
   @SuppressWarnings("unchecked")
-  @Override public void write(JsonWriter out, Object value) throws IOException {
+  @Override public void write(JsonWriter out, Object value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
     if (value == null) {
       out.nullValue();
       return;
@@ -104,6 +105,6 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
       return;
     }
 
-    typeAdapter.write(out, value);
+    typeAdapter.write(out, value, exclusionStrategy);
   }
 }

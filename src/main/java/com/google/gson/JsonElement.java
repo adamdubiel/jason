@@ -321,7 +321,9 @@ public abstract class JsonElement {
       StringWriter stringWriter = new StringWriter();
       JsonWriter jsonWriter = new JsonWriter(stringWriter);
       jsonWriter.setLenient(true);
-      Streams.write(this, jsonWriter);
+
+      // @JASON
+      Streams.write(this, jsonWriter, null);
       return stringWriter.toString();
     } catch (IOException e) {
       throw new AssertionError(e);

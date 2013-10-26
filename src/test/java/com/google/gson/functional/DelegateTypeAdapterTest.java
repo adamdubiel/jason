@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.common.TestTypes.BagOfPrimitives;
@@ -76,9 +77,9 @@ public class DelegateTypeAdapterTest extends TestCase {
       final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
       return new TypeAdapter<T>() {
         @Override
-        public void write(JsonWriter out, T value) throws IOException {
+        public void write(JsonWriter out, T value, RuntimeExclusionStrategy runtimeExclusion) throws IOException {
           ++numWrites;
-          delegate.write(out, value);
+          delegate.write(out, value, runtimeExclusion);
         }
 
         @Override

@@ -16,6 +16,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
+import com.google.gson.RuntimeExclusionStrategy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -42,7 +43,7 @@ final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Override
-  public void write(JsonWriter out, T value) throws IOException {
+  public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusion) throws IOException {
     // Order of preference for choosing type adapters
     // First preference: a type adapter registered for the runtime type
     // Second preference: a type adapter registered for the declared type
@@ -65,7 +66,7 @@ final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
         chosen = runtimeTypeAdapter;
       }
     }
-    chosen.write(out, value);
+    chosen.write(out, value, exclusion);
   }
 
   /**
