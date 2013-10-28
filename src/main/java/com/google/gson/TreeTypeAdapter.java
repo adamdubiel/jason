@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import com.google.gson.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;

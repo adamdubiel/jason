@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.gson.transform;
+package org.bitbucket.adubiel.jason.transform;
 
 import java.util.HashMap;
 import java.util.Map;

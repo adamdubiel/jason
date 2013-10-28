@@ -16,8 +16,8 @@
 
 package com.google.gson;
 
-import com.google.gson.transform.RuntimeTransformer;
-import com.google.gson.transform.EmptyRuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.EmptyRuntimeTransformer;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.Primitives;

@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import com.google.gson.transform.EmptyRuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.EmptyRuntimeTransformer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;

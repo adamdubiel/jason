@@ -15,7 +15,7 @@
  */
 package com.google.gson;
 
-import com.google.gson.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.stream.JsonReader;

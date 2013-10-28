@@ -17,8 +17,8 @@ package org.bitbucket.adubiel.jason;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.transform.DefaultRuntimeTransformer;
-import com.google.gson.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.DefaultRuntimeTransformer;
+import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
 import com.jayway.jsonassert.JsonAssert;
 import java.util.HashMap;
 import java.util.HashSet;
