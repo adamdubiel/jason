@@ -158,7 +158,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       this.constructor = constructor;
     }
 
-    public Map<K, V> read(JsonReader in) throws IOException {
+    public Map<K, V> read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
       JsonToken peek = in.peek();
       if (peek == JsonToken.NULL) {
         in.nextNull();
@@ -171,8 +171,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         in.beginArray();
         while (in.hasNext()) {
           in.beginArray(); // entry array
-          K key = keyTypeAdapter.read(in);
-          V value = valueTypeAdapter.read(in);
+          K key = keyTypeAdapter.read(in, runtimeTransformer);
+          V value = valueTypeAdapter.read(in, runtimeTransformer);
           V replaced = map.put(key, value);
           if (replaced != null) {
             throw new JsonSyntaxException("duplicate key: " + key);
@@ -184,8 +184,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         in.beginObject();
         while (in.hasNext()) {
           JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
-          K key = keyTypeAdapter.read(in);
-          V value = valueTypeAdapter.read(in);
+          K key = keyTypeAdapter.read(in, runtimeTransformer);
+          V value = valueTypeAdapter.read(in, runtimeTransformer);
           V replaced = map.put(key, value);
           if (replaced != null) {
             throw new JsonSyntaxException("duplicate key: " + key);
@@ -196,7 +196,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       return map;
     }
 
-    public void write(JsonWriter out, Map<K, V> map, RuntimeTransformer exclusionStrategy) throws IOException {
+    public void write(JsonWriter out, Map<K, V> map, RuntimeTransformer runtimeTransformer) throws IOException {
       if (map == null) {
         out.nullValue();
         return;
@@ -206,7 +206,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         out.beginObject();
         for (Map.Entry<K, V> entry : map.entrySet()) {
           out.name(String.valueOf(entry.getKey()));
-          valueTypeAdapter.write(out, entry.getValue(), exclusionStrategy);
+          valueTypeAdapter.write(out, entry.getValue(), runtimeTransformer);
         }
         out.endObject();
         return;
@@ -217,7 +217,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
 
       List<V> values = new ArrayList<V>(map.size());
       for (Map.Entry<K, V> entry : map.entrySet()) {
-        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey(), exclusionStrategy);
+        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey(), runtimeTransformer);
         keys.add(keyElement);
         values.add(entry.getValue());
         hasComplexKeys |= keyElement.isJsonArray() || keyElement.isJsonObject();
@@ -227,8 +227,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         out.beginArray();
         for (int i = 0; i < keys.size(); i++) {
           out.beginArray(); // entry array
-          Streams.write(keys.get(i), out, exclusionStrategy);
-          valueTypeAdapter.write(out, values.get(i), exclusionStrategy);
+          Streams.write(keys.get(i), out);
+          valueTypeAdapter.write(out, values.get(i), runtimeTransformer);
           out.endArray();
         }
         out.endArray();
@@ -237,7 +237,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         for (int i = 0; i < keys.size(); i++) {
           JsonElement keyElement = keys.get(i);
           out.name(keyToString(keyElement));
-          valueTypeAdapter.write(out, values.get(i), exclusionStrategy);
+          valueTypeAdapter.write(out, values.get(i), runtimeTransformer);
         }
         out.endObject();
       }

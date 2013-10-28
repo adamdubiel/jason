@@ -77,15 +77,15 @@ public class DelegateTypeAdapterTest extends TestCase {
       final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
       return new TypeAdapter<T>() {
         @Override
-        public void write(JsonWriter out, T value, RuntimeTransformer runtimeExclusion) throws IOException {
+        public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
           ++numWrites;
-          delegate.write(out, value, runtimeExclusion);
+          delegate.write(out, value, runtimeTransformer);
         }
 
         @Override
-        public T read(JsonReader in) throws IOException {
+        public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
           ++numReads;
-          return delegate.read(in);
+          return delegate.read(in, runtimeTransformer);
         }
       };
     }

@@ -23,7 +23,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -210,7 +209,7 @@ public final class StreamingTypeAdaptersTest extends TestCase {
     passengersArray.add(jesseObject);
     truckObject.add("passengers", passengersArray);
 
-    Truck truck = truckAdapter.fromJsonTree(truckObject);
+    Truck truck = truckAdapter.fromJsonTree(truckObject, new EmptyRuntimeTransformer());
     assertEquals(300.0, truck.horsePower);
     assertEquals(Arrays.asList(new Person("Jesse", 30)), truck.passengers);
   }
@@ -259,6 +258,6 @@ public final class StreamingTypeAdaptersTest extends TestCase {
   private <T> T fromJson(TypeAdapter<T> typeAdapter, String json) throws IOException {
     JsonReader reader = new JsonReader(new StringReader(json));
     reader.setLenient(true); // TODO: non-lenient?
-    return typeAdapter.read(reader);
+    return typeAdapter.read(reader, new EmptyRuntimeTransformer());
   }
 }

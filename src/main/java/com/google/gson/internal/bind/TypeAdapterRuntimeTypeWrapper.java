@@ -37,8 +37,8 @@ final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
   }
 
   @Override
-  public T read(JsonReader in) throws IOException {
-    return delegate.read(in);
+  public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+    return delegate.read(in, runtimeTransformer);
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})

@@ -70,7 +70,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
       this.constructor = constructor;
     }
 
-    public Collection<E> read(JsonReader in) throws IOException {
+    public Collection<E> read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
       if (in.peek() == JsonToken.NULL) {
         in.nextNull();
         return null;
@@ -79,14 +79,14 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
       Collection<E> collection = constructor.construct();
       in.beginArray();
       while (in.hasNext()) {
-        E instance = elementTypeAdapter.read(in);
+        E instance = elementTypeAdapter.read(in, runtimeTransformer);
         collection.add(instance);
       }
       in.endArray();
       return collection;
     }
 
-    public void write(JsonWriter out, Collection<E> collection, RuntimeTransformer exclusionStrategy) throws IOException {
+    public void write(JsonWriter out, Collection<E> collection, RuntimeTransformer runtimeTransformer) throws IOException {
       if (collection == null) {
         out.nullValue();
         return;
@@ -94,7 +94,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
 
       out.beginArray();
       for (E element : collection) {
-        elementTypeAdapter.write(out, element, exclusionStrategy);
+        elementTypeAdapter.write(out, element, runtimeTransformer);
       }
       out.endArray();
     }

@@ -82,16 +82,16 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     return new ReflectiveTypeAdapterFactory.BoundField(name, serialize, deserialize) {
       final TypeAdapter<?> typeAdapter = context.getAdapter(fieldType);
       @SuppressWarnings({"unchecked", "rawtypes"}) // the type adapter and field type always agree
-      @Override void write(JsonWriter writer, Object value, RuntimeTransformer exclusionStrategy)
+      @Override void write(JsonWriter writer, Object value, RuntimeTransformer runtimeTransformer)
           throws IOException, IllegalAccessException {
         Object fieldValue = field.get(value);
         TypeAdapter t =
           new TypeAdapterRuntimeTypeWrapper(context, this.typeAdapter, fieldType.getType());
-        t.write(writer, fieldValue, exclusionStrategy);
+        t.write(writer, fieldValue, runtimeTransformer);
       }
-      @Override void read(JsonReader reader, Object value)
+      @Override void read(JsonReader reader, Object value, RuntimeTransformer runtimeTransformer)
           throws IOException, IllegalAccessException {
-        Object fieldValue = typeAdapter.read(reader);
+        Object fieldValue = typeAdapter.read(reader, runtimeTransformer);
         if (fieldValue != null || !isPrimitive) {
           field.set(value, fieldValue);
         }
@@ -141,8 +141,8 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       this.deserialized = deserialized;
     }
 
-    abstract void write(JsonWriter writer, Object value, RuntimeTransformer exclusionStrategy) throws IOException, IllegalAccessException;
-    abstract void read(JsonReader reader, Object value) throws IOException, IllegalAccessException;
+    abstract void write(JsonWriter writer, Object value, RuntimeTransformer runtimeTransformer) throws IOException, IllegalAccessException;
+    abstract void read(JsonReader reader, Object value, RuntimeTransformer runtimeTransformer) throws IOException, IllegalAccessException;
   }
 
   public static final class Adapter<T> extends TypeAdapter<T> {
@@ -156,7 +156,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       this.type = type;
     }
 
-    @Override public T read(JsonReader in) throws IOException {
+    @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
       if (in.peek() == JsonToken.NULL) {
         in.nextNull();
         return null;
@@ -172,7 +172,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
           if (field == null || !field.deserialized) {
             in.skipValue();
           } else {
-            field.read(in, instance);
+            field.read(in, instance, runtimeTransformer);
           }
         }
       } catch (IllegalStateException e) {

@@ -48,9 +48,9 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     this.skipPast = skipPast;
   }
 
-  @Override public T read(JsonReader in) throws IOException {
+  @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
     if (deserializer == null) {
-      return delegate().read(in);
+      return delegate().read(in, runtimeTransformer);
     }
     JsonElement value = Streams.parse(in);
     if (value.isJsonNull()) {
@@ -59,9 +59,9 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     return deserializer.deserialize(value, typeToken.getType(), gson.deserializationContext);
   }
 
-  @Override public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
+  @Override public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
     if (serializer == null) {
-      delegate().write(out, value, exclusionStrategy);
+      delegate().write(out, value, runtimeTransformer);
       return;
     }
     if (value == null) {
@@ -69,7 +69,7 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
       return;
     }
     JsonElement tree = serializer.serialize(value, typeToken.getType(), gson.serializationContext);
-    Streams.write(tree, out, exclusionStrategy);
+    Streams.write(tree, out);
   }
 
   private TypeAdapter<T> delegate() {

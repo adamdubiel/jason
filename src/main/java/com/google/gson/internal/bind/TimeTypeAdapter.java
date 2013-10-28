@@ -18,6 +18,7 @@ package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -38,7 +39,7 @@ import java.util.Date;
  * this class state. DateFormat isn't thread safe either, so this class has
  * to synchronize its read and write methods.
  */
-public final class TimeTypeAdapter extends TypeAdapter<Time> {
+public final class TimeTypeAdapter extends SimpleTypeAdapter<Time> {
   public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
     @SuppressWarnings("unchecked") // we use a runtime check to make sure the 'T's equal
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
@@ -61,7 +62,7 @@ public final class TimeTypeAdapter extends TypeAdapter<Time> {
     }
   }
 
-  @Override public synchronized void write(JsonWriter out, Time value, RuntimeTransformer exclusionStrategy) throws IOException {
+  @Override public synchronized void write(JsonWriter out, Time value) throws IOException {
     out.value(value == null ? null : format.format(value));
   }
 }

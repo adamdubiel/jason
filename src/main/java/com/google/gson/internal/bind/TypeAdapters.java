@@ -524,8 +524,8 @@ public final class TypeAdapters {
 
       final TypeAdapter<Date> dateTypeAdapter = gson.getAdapter(Date.class);
       return (TypeAdapter<T>) new TypeAdapter<Timestamp>() {
-        @Override public Timestamp read(JsonReader in) throws IOException {
-          Date date = dateTypeAdapter.read(in);
+        @Override public Timestamp read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+          Date date = dateTypeAdapter.read(in, runtimeTransformer);
           return date != null ? new Timestamp(date.getTime()) : null;
         }
 
@@ -641,7 +641,7 @@ public final class TypeAdapters {
 
   public static final TypeAdapterFactory LOCALE_FACTORY = newFactory(Locale.class, LOCALE);
 
-  public static final TypeAdapter<JsonElement> JSON_ELEMENT = new SimpleTypeAdapter<JsonElement>() {
+  public static final SimpleTypeAdapter<JsonElement> JSON_ELEMENT = new SimpleTypeAdapter<JsonElement>() {
     @Override public JsonElement read(JsonReader in) throws IOException {
       switch (in.peek()) {
       case STRING:

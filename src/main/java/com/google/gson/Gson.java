@@ -688,7 +688,7 @@ public final class Gson {
    * Writes the JSON for {@code jsonElement} to {@code writer}.
    * @throws JsonIOException if there was a problem writing to the writer
    */
-  public void toJson(JsonElement jsonElement, JsonWriter writer, RuntimeTransformer exclusionStrategy) throws JsonIOException {
+  public void toJson(JsonElement jsonElement, JsonWriter writer, RuntimeTransformer runtimeTransformer) throws JsonIOException {
     boolean oldLenient = writer.isLenient();
     writer.setLenient(true);
     boolean oldHtmlSafe = writer.isHtmlSafe();
@@ -696,7 +696,7 @@ public final class Gson {
     boolean oldSerializeNulls = writer.getSerializeNulls();
     writer.setSerializeNulls(serializeNulls);
     try {
-      Streams.write(jsonElement, writer, exclusionStrategy);
+      Streams.write(jsonElement, writer);
     } catch (IOException e) {
       throw new JsonIOException(e);
     } finally {
@@ -704,6 +704,10 @@ public final class Gson {
       writer.setHtmlSafe(oldHtmlSafe);
       writer.setSerializeNulls(oldSerializeNulls);
     }
+  }
+
+  public <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException {
+      return fromJson(json, classOfT, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -723,9 +727,13 @@ public final class Gson {
    * @throws JsonSyntaxException if json is not a valid representation for an object of type
    * classOfT
    */
-  public <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException {
-    Object object = fromJson(json, (Type) classOfT);
+  public <T> T fromJson(String json, Class<T> classOfT, RuntimeTransformer runtimeTransformer) throws JsonSyntaxException {
+    Object object = fromJson(json, (Type) classOfT, runtimeTransformer);
     return Primitives.wrap(classOfT).cast(object);
+  }
+
+  public <T> T fromJson(String json, Type typeOfT) throws JsonSyntaxException {
+      return fromJson(json, typeOfT, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -747,13 +755,17 @@ public final class Gson {
    * @throws JsonSyntaxException if json is not a valid representation for an object of type
    */
   @SuppressWarnings("unchecked")
-  public <T> T fromJson(String json, Type typeOfT) throws JsonSyntaxException {
+  public <T> T fromJson(String json, Type typeOfT, RuntimeTransformer runtimeTransformer) throws JsonSyntaxException {
     if (json == null) {
       return null;
     }
     StringReader reader = new StringReader(json);
-    T target = (T) fromJson(reader, typeOfT);
+    T target = (T) fromJson(reader, typeOfT, runtimeTransformer);
     return target;
+  }
+
+  public <T> T fromJson(Reader json, Class<T> classOfT) throws JsonSyntaxException, JsonIOException {
+      return fromJson(json, classOfT, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -774,11 +786,15 @@ public final class Gson {
    * @throws JsonSyntaxException if json is not a valid representation for an object of type
    * @since 1.2
    */
-  public <T> T fromJson(Reader json, Class<T> classOfT) throws JsonSyntaxException, JsonIOException {
+  public <T> T fromJson(Reader json, Class<T> classOfT, RuntimeTransformer runtimeTransformer) throws JsonSyntaxException, JsonIOException {
     JsonReader jsonReader = new JsonReader(json);
     Object object = fromJson(jsonReader, classOfT);
     assertFullConsumption(object, jsonReader);
     return Primitives.wrap(classOfT).cast(object);
+  }
+
+  public <T> T fromJson(Reader json, Type typeOfT) throws JsonIOException, JsonSyntaxException {
+      return fromJson(json, typeOfT, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -801,9 +817,9 @@ public final class Gson {
    * @since 1.2
    */
   @SuppressWarnings("unchecked")
-  public <T> T fromJson(Reader json, Type typeOfT) throws JsonIOException, JsonSyntaxException {
+  public <T> T fromJson(Reader json, Type typeOfT, RuntimeTransformer runtimeTransformer) throws JsonIOException, JsonSyntaxException {
     JsonReader jsonReader = new JsonReader(json);
-    T object = (T) fromJson(jsonReader, typeOfT);
+    T object = (T) fromJson(jsonReader, typeOfT, runtimeTransformer);
     assertFullConsumption(object, jsonReader);
     return object;
   }
@@ -820,6 +836,10 @@ public final class Gson {
     }
   }
 
+  public <T> T fromJson(JsonReader reader, Type typeOfT) throws JsonIOException, JsonSyntaxException {
+      return fromJson(reader, typeOfT, EMPTY_RUNTIME_TRANSFORMER);
+  }
+
   /**
    * Reads the next JSON value from {@code reader} and convert it to an object
    * of type {@code typeOfT}.
@@ -829,7 +849,7 @@ public final class Gson {
    * @throws JsonSyntaxException if json is not a valid representation for an object of type
    */
   @SuppressWarnings("unchecked")
-  public <T> T fromJson(JsonReader reader, Type typeOfT) throws JsonIOException, JsonSyntaxException {
+  public <T> T fromJson(JsonReader reader, Type typeOfT, RuntimeTransformer runtimeTransformer) throws JsonIOException, JsonSyntaxException {
     boolean isEmpty = true;
     boolean oldLenient = reader.isLenient();
     reader.setLenient(true);
@@ -838,7 +858,7 @@ public final class Gson {
       isEmpty = false;
       TypeToken<T> typeToken = (TypeToken<T>) TypeToken.get(typeOfT);
       TypeAdapter<T> typeAdapter = getAdapter(typeToken);
-      T object = typeAdapter.read(reader);
+      T object = typeAdapter.read(reader, runtimeTransformer);
       return object;
     } catch (EOFException e) {
       /*
@@ -859,6 +879,10 @@ public final class Gson {
     }
   }
 
+  public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
+      return fromJson(json, classOfT, EMPTY_RUNTIME_TRANSFORMER);
+  }
+
   /**
    * This method deserializes the Json read from the specified parse tree into an object of the
    * specified type. It is not suitable to use if the specified class is a generic type since it
@@ -875,9 +899,13 @@ public final class Gson {
    * @throws JsonSyntaxException if json is not a valid representation for an object of type typeOfT
    * @since 1.3
    */
-  public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
-    Object object = fromJson(json, (Type) classOfT);
+  public <T> T fromJson(JsonElement json, Class<T> classOfT, RuntimeTransformer runtimeTransformer) throws JsonSyntaxException {
+    Object object = fromJson(json, (Type) classOfT, runtimeTransformer);
     return Primitives.wrap(classOfT).cast(object);
+  }
+
+  public <T> T fromJson(JsonElement json, Type typeOfT) throws JsonSyntaxException {
+      return fromJson(json, typeOfT, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -899,11 +927,11 @@ public final class Gson {
    * @since 1.3
    */
   @SuppressWarnings("unchecked")
-  public <T> T fromJson(JsonElement json, Type typeOfT) throws JsonSyntaxException {
+  public <T> T fromJson(JsonElement json, Type typeOfT, RuntimeTransformer runtimeTransformer) throws JsonSyntaxException {
     if (json == null) {
       return null;
     }
-    return (T) fromJson(new JsonTreeReader(json), typeOfT);
+    return (T) fromJson(new JsonTreeReader(json), typeOfT, runtimeTransformer);
   }
 
   static class FutureTypeAdapter<T> extends TypeAdapter<T> {
@@ -916,18 +944,18 @@ public final class Gson {
       delegate = typeAdapter;
     }
 
-    @Override public T read(JsonReader in) throws IOException {
+    @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
       if (delegate == null) {
         throw new IllegalStateException();
       }
-      return delegate.read(in);
+      return delegate.read(in, runtimeTransformer);
     }
 
-    @Override public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
+    @Override public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
       if (delegate == null) {
         throw new IllegalStateException();
       }
-      delegate.write(out, value, exclusionStrategy);
+      delegate.write(out, value, runtimeTransformer);
     }
   }
 

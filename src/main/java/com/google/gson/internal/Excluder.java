@@ -94,17 +94,17 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     return result;
   }
 
-  public Excluder withExclusionStrategy(ExclusionStrategy exclusionStrategy,
+  public Excluder withExclusionStrategy(ExclusionStrategy runtimeTransformer,
       boolean serialization, boolean deserialization) {
     Excluder result = clone();
     if (serialization) {
       result.serializationStrategies = new ArrayList<ExclusionStrategy>(serializationStrategies);
-      result.serializationStrategies.add(exclusionStrategy);
+      result.serializationStrategies.add(runtimeTransformer);
     }
     if (deserialization) {
       result.deserializationStrategies
           = new ArrayList<ExclusionStrategy>(deserializationStrategies);
-      result.deserializationStrategies.add(exclusionStrategy);
+      result.deserializationStrategies.add(runtimeTransformer);
     }
     return result;
   }
@@ -122,20 +122,20 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
       /** The delegate is lazily created because it may not be needed, and creating it may fail. */
       private TypeAdapter<T> delegate;
 
-      @Override public T read(JsonReader in) throws IOException {
+      @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
         if (skipDeserialize) {
           in.skipValue();
           return null;
         }
-        return delegate().read(in);
+        return delegate().read(in, runtimeTransformer);
       }
 
-      @Override public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
+      @Override public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
         if (skipSerialize) {
           out.nullValue();
           return;
         }
-        delegate().write(out, value, exclusionStrategy);
+        delegate().write(out, value, runtimeTransformer);
       }
 
       private TypeAdapter<T> delegate() {
@@ -179,8 +179,8 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     List<ExclusionStrategy> list = serialize ? serializationStrategies : deserializationStrategies;
     if (!list.isEmpty()) {
       FieldAttributes fieldAttributes = new FieldAttributes(field);
-      for (ExclusionStrategy exclusionStrategy : list) {
-        if (exclusionStrategy.shouldSkipField(fieldAttributes)) {
+      for (ExclusionStrategy runtimeTransformer : list) {
+        if (runtimeTransformer.shouldSkipField(fieldAttributes)) {
           return true;
         }
       }
@@ -204,8 +204,8 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     }
 
     List<ExclusionStrategy> list = serialize ? serializationStrategies : deserializationStrategies;
-    for (ExclusionStrategy exclusionStrategy : list) {
-      if (exclusionStrategy.shouldSkipClass(clazz)) {
+    for (ExclusionStrategy runtimeTransformer : list) {
+      if (runtimeTransformer.shouldSkipClass(clazz)) {
         return true;
       }
     }
