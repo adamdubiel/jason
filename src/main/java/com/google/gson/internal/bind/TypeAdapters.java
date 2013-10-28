@@ -43,7 +43,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.RuntimeExclusionStrategy;
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -529,7 +529,7 @@ public final class TypeAdapters {
           return date != null ? new Timestamp(date.getTime()) : null;
         }
 
-        @Override public void write(JsonWriter out, Timestamp value, RuntimeExclusionStrategy runtimeExclusion) throws IOException {
+        @Override public void write(JsonWriter out, Timestamp value, RuntimeTransformer runtimeExclusion) throws IOException {
           dateTypeAdapter.write(out, value, runtimeExclusion);
         }
       };

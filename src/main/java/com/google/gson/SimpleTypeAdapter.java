@@ -15,6 +15,7 @@
  */
 package com.google.gson;
 
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 
@@ -27,7 +28,7 @@ public abstract class SimpleTypeAdapter<T> extends TypeAdapter<T> {
     public abstract void write(JsonWriter out, T value) throws IOException;
 
     @Override
-    public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
         write(out, value);
     }
 }

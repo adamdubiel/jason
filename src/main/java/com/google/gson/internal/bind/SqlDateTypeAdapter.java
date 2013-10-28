@@ -18,7 +18,7 @@ package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.RuntimeExclusionStrategy;
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
@@ -62,7 +62,7 @@ public final class SqlDateTypeAdapter extends TypeAdapter<java.sql.Date> {
   }
 
   @Override
-  public synchronized void write(JsonWriter out, java.sql.Date value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+  public synchronized void write(JsonWriter out, java.sql.Date value, RuntimeTransformer exclusionStrategy) throws IOException {
     out.value(value == null ? null : format.format(value));
   }
 }

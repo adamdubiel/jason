@@ -15,6 +15,7 @@
  */
 package com.google.gson;
 
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.stream.JsonReader;
@@ -127,7 +128,7 @@ public abstract class TypeAdapter<T> {
      *
      * @param value the Java object to write. May be null.
      */
-    public abstract void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException;
+    public abstract void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException;
 
     /**
      * Converts {@code value} to a JSON document and writes it to {@code out}.
@@ -140,7 +141,7 @@ public abstract class TypeAdapter<T> {
      * @param value the Java object to convert. May be null.
      * @since 2.2
      */
-    public final void toJson(Writer out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    public final void toJson(Writer out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
         JsonWriter writer = new JsonWriter(out);
         write(writer, value, exclusionStrategy);
     }
@@ -188,7 +189,7 @@ public abstract class TypeAdapter<T> {
     public final TypeAdapter<T> nullSafe() {
         return new TypeAdapter<T>() {
             @Override
-            public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+            public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
                 if (value == null) {
                     out.nullValue();
                 } else {
@@ -217,7 +218,7 @@ public abstract class TypeAdapter<T> {
      * @param value the Java object to convert. May be null.
      * @since 2.2
      */
-    public final String toJson(T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    public final String toJson(T value, RuntimeTransformer exclusionStrategy) throws IOException {
         StringWriter stringWriter = new StringWriter();
         toJson(stringWriter, value, exclusionStrategy);
         return stringWriter.toString();
@@ -230,7 +231,7 @@ public abstract class TypeAdapter<T> {
      * @return the converted JSON tree. May be {@link JsonNull}.
      * @since 2.2
      */
-    public final JsonElement toJsonTree(T value, RuntimeExclusionStrategy exclusionStrategy) {
+    public final JsonElement toJsonTree(T value, RuntimeTransformer exclusionStrategy) {
         try {
             JsonTreeWriter jsonWriter = new JsonTreeWriter();
             write(jsonWriter, value, exclusionStrategy);

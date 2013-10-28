@@ -16,6 +16,7 @@
 
 package com.google.gson;
 
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
@@ -58,7 +59,7 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     return deserializer.deserialize(value, typeToken.getType(), gson.deserializationContext);
   }
 
-  @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+  @Override public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
     if (serializer == null) {
       delegate().write(out, value, exclusionStrategy);
       return;

@@ -17,10 +17,13 @@ package org.bitbucket.adubiel.jason;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.transform.DefaultRuntimeTransformer;
+import com.google.gson.transform.RuntimeTransformer;
 import com.jayway.jsonassert.JsonAssert;
-import java.io.StringWriter;
-import org.bitbucket.adubiel.jason.test.ParentNicknameRuntimeExclusionStrategy;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.bitbucket.adubiel.jason.test.model.Parent;
 import org.junit.Test;
 
@@ -35,12 +38,15 @@ public class RuntimeExclusionTest {
         // given
         Gson gson = new GsonBuilder().create();
         Parent parent = new Parent("test", "should be skipped");
-        StringWriter output = new StringWriter();
-        JsonWriter jsonWriter = new JsonWriter(output);
+
+        Map<Class<?>, Set<String>> includes = new HashMap<Class<?>, Set<String>>();
+        includes.put(Parent.class, new HashSet<String>());
+        includes.get(Parent.class).add("name");
+
+        RuntimeTransformer transformer = new DefaultRuntimeTransformer(includes);
 
         // when
-        gson.toJson(parent, Parent.class, jsonWriter, new ParentNicknameRuntimeExclusionStrategy());
-        String json = output.toString();
+        String json = gson.toJson(parent, transformer);
 
         // then
         JsonAssert.with(json).assertEquals("$.name", "test").assertNotDefined("$.nickName");

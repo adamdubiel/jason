@@ -16,6 +16,8 @@
 
 package com.google.gson;
 
+import com.google.gson.transform.RuntimeTransformer;
+import com.google.gson.transform.EmptyRuntimeTransformer;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.Primitives;
@@ -98,6 +100,8 @@ public final class Gson {
   static final boolean DEFAULT_JSON_NON_EXECUTABLE = false;
 
   private static final String JSON_NON_EXECUTABLE_PREFIX = ")]}'\n";
+
+  private static final RuntimeTransformer EMPTY_RUNTIME_TRANSFORMER = new EmptyRuntimeTransformer();
 
   /**
    * This thread local guards against reentrant calls to getAdapter(). In
@@ -445,6 +449,10 @@ public final class Gson {
     return getAdapter(TypeToken.get(type));
   }
 
+  public JsonElement toJsonTree(Object src) {
+      return toJsonTree(src, EMPTY_RUNTIME_TRANSFORMER);
+  }
+
   /**
    * This method serializes the specified object into its equivalent representation as a tree of
    * {@link JsonElement}s. This method should be used when the specified object is not a generic
@@ -458,11 +466,15 @@ public final class Gson {
    * @return Json representation of {@code src}.
    * @since 1.4
    */
-  public JsonElement toJsonTree(Object src) {
+  public JsonElement toJsonTree(Object src, RuntimeTransformer runtimeTransformer) {
     if (src == null) {
       return JsonNull.INSTANCE;
     }
-    return toJsonTree(src, src.getClass());
+    return toJsonTree(src, src.getClass(), runtimeTransformer);
+  }
+
+  public JsonElement toJsonTree(Object src, Type typeOfSrc) {
+      return toJsonTree(src, typeOfSrc, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -481,10 +493,14 @@ public final class Gson {
    * @return Json representation of {@code src}
    * @since 1.4
    */
-  public JsonElement toJsonTree(Object src, Type typeOfSrc) {
+  public JsonElement toJsonTree(Object src, Type typeOfSrc, RuntimeTransformer runtimeTransformer) {
     JsonTreeWriter writer = new JsonTreeWriter();
-    toJson(src, typeOfSrc, writer);
+    toJson(src, typeOfSrc, writer, runtimeTransformer);
     return writer.get();
+  }
+
+  public String toJson(Object src) {
+      return toJson(src, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -500,11 +516,15 @@ public final class Gson {
    * @param src the object for which Json representation is to be created setting for Gson
    * @return Json representation of {@code src}.
    */
-  public String toJson(Object src) {
+  public String toJson(Object src, RuntimeTransformer runtimeTransformer) {
     if (src == null) {
       return toJson(JsonNull.INSTANCE);
     }
-    return toJson(src, src.getClass());
+    return toJson(src, src.getClass(), runtimeTransformer);
+  }
+
+  public String toJson(Object src, Type typeOfSrc) {
+      return toJson(src, typeOfSrc, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -522,10 +542,14 @@ public final class Gson {
    * </pre>
    * @return Json representation of {@code src}
    */
-  public String toJson(Object src, Type typeOfSrc) {
+  public String toJson(Object src, Type typeOfSrc, RuntimeTransformer runtimeTransformer) {
     StringWriter writer = new StringWriter();
-    toJson(src, typeOfSrc, writer);
+    toJson(src, typeOfSrc, writer, runtimeTransformer);
     return writer.toString();
+  }
+
+  public void toJson(Object src, Appendable writer) throws JsonIOException {
+      toJson(src, writer, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -542,12 +566,16 @@ public final class Gson {
    * @throws JsonIOException if there was a problem writing to the writer
    * @since 1.2
    */
-  public void toJson(Object src, Appendable writer) throws JsonIOException {
+  public void toJson(Object src, Appendable writer, RuntimeTransformer runtimeTransformer) throws JsonIOException {
     if (src != null) {
-      toJson(src, src.getClass(), writer);
+      toJson(src, src.getClass(), writer, runtimeTransformer);
     } else {
       toJson(JsonNull.INSTANCE, writer);
     }
+  }
+
+  public void toJson(Object src, Type typeOfSrc, Appendable writer) throws JsonIOException {
+      toJson(src, typeOfSrc, writer, EMPTY_RUNTIME_TRANSFORMER);
   }
 
   /**
@@ -566,17 +594,17 @@ public final class Gson {
    * @throws JsonIOException if there was a problem writing to the writer
    * @since 1.2
    */
-  public void toJson(Object src, Type typeOfSrc, Appendable writer) throws JsonIOException {
+  public void toJson(Object src, Type typeOfSrc, Appendable writer, RuntimeTransformer runtimeTransformer) throws JsonIOException {
     try {
       JsonWriter jsonWriter = newJsonWriter(Streams.writerForAppendable(writer));
-      toJson(src, typeOfSrc, jsonWriter);
+      toJson(src, typeOfSrc, jsonWriter, runtimeTransformer);
     } catch (IOException e) {
       throw new JsonIOException(e);
     }
   }
 
   public void toJson(Object src, Type typeOfSrc, JsonWriter writer) throws JsonIOException {
-      toJson(src, typeOfSrc, writer, new EmptyRuntimeExclusionStrategy());
+      toJson(src, typeOfSrc, writer, EMPTY_RUNTIME_TRANSFORMER);
   }
   /**
    * Writes the JSON representation of {@code src} of type {@code typeOfSrc} to
@@ -584,7 +612,7 @@ public final class Gson {
    * @throws JsonIOException if there was a problem writing to the writer
    */
   @SuppressWarnings("unchecked")
-  public void toJson(Object src, Type typeOfSrc, JsonWriter writer, RuntimeExclusionStrategy runtimeExclusion) throws JsonIOException {
+  public void toJson(Object src, Type typeOfSrc, JsonWriter writer, RuntimeTransformer runtimeTransformer) throws JsonIOException {
     TypeAdapter<?> adapter = getAdapter(TypeToken.get(typeOfSrc));
     boolean oldLenient = writer.isLenient();
     writer.setLenient(true);
@@ -593,7 +621,7 @@ public final class Gson {
     boolean oldSerializeNulls = writer.getSerializeNulls();
     writer.setSerializeNulls(serializeNulls);
     try {
-      ((TypeAdapter<Object>) adapter).write(writer, src, runtimeExclusion);
+      ((TypeAdapter<Object>) adapter).write(writer, src, runtimeTransformer);
     } catch (IOException e) {
       throw new JsonIOException(e);
     } finally {
@@ -603,6 +631,10 @@ public final class Gson {
     }
   }
 
+  public String toJson(JsonElement jsonElement) {
+      return toJson(jsonElement, EMPTY_RUNTIME_TRANSFORMER);
+  }
+
   /**
    * Converts a tree of {@link JsonElement}s into its equivalent JSON representation.
    *
@@ -610,9 +642,9 @@ public final class Gson {
    * @return JSON String representation of the tree
    * @since 1.4
    */
-  public String toJson(JsonElement jsonElement) {
+  public String toJson(JsonElement jsonElement, RuntimeTransformer runtimeTransformer) {
     StringWriter writer = new StringWriter();
-    toJson(jsonElement, writer);
+    toJson(jsonElement, writer, runtimeTransformer);
     return writer.toString();
   }
 
@@ -650,13 +682,13 @@ public final class Gson {
   }
 
   public void toJson(JsonElement jsonElement, JsonWriter writer) throws JsonIOException {
-      toJson(jsonElement, writer, new EmptyRuntimeExclusionStrategy());
+      toJson(jsonElement, writer, EMPTY_RUNTIME_TRANSFORMER);
   }
   /**
    * Writes the JSON for {@code jsonElement} to {@code writer}.
    * @throws JsonIOException if there was a problem writing to the writer
    */
-  public void toJson(JsonElement jsonElement, JsonWriter writer, RuntimeExclusionStrategy exclusionStrategy) throws JsonIOException {
+  public void toJson(JsonElement jsonElement, JsonWriter writer, RuntimeTransformer exclusionStrategy) throws JsonIOException {
     boolean oldLenient = writer.isLenient();
     writer.setLenient(true);
     boolean oldHtmlSafe = writer.isHtmlSafe();
@@ -891,7 +923,7 @@ public final class Gson {
       return delegate.read(in);
     }
 
-    @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    @Override public void write(JsonWriter out, T value, RuntimeTransformer exclusionStrategy) throws IOException {
       if (delegate == null) {
         throw new IllegalStateException();
       }

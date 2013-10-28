@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bitbucket.adubiel.jason.test;
+package com.google.gson.transform;
 
-import com.google.gson.RuntimeExclusionStrategy;
-import com.google.gson.reflect.TypeToken;
-import org.bitbucket.adubiel.jason.test.model.Parent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Adam Dubiel
  */
-public class ParentNicknameRuntimeExclusionStrategy implements RuntimeExclusionStrategy {
+public class FieldNameTransformer {
 
-    @Override
-    public boolean skipField(TypeToken<?> token, String fieldName) {
-        if (token.getType().equals(Parent.class) && fieldName.equals("nickName")) {
-            return true;
+    private Map<Class<?>, Map<String, String>> nameTransformations = new HashMap<Class<?>, Map<String, String>>();
+
+    public String transformName(Class<?> clazz, String name) {
+        Map<String, String> classTransformations = nameTransformations.get(clazz);
+        if (nameTransformations != null) {
+            String transformedName = classTransformations.get(name);
+            return transformedName != null ? transformedName : name;
         }
-        return false;
+        return name;
     }
 }

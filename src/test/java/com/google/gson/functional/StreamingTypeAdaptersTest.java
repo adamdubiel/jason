@@ -16,14 +16,14 @@
 
 package com.google.gson.functional;
 
-import com.google.gson.EmptyRuntimeExclusionStrategy;
+import com.google.gson.transform.EmptyRuntimeTransformer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.RuntimeExclusionStrategy;
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -251,7 +251,7 @@ public final class StreamingTypeAdaptersTest extends TestCase {
   private static <T> String toJson(TypeAdapter<T> typeAdapter, T value) throws IOException {
     StringWriter stringWriter = new StringWriter();
     JsonWriter writer = new JsonWriter(stringWriter);
-    typeAdapter.write(writer, value, new EmptyRuntimeExclusionStrategy());
+    typeAdapter.write(writer, value, new EmptyRuntimeTransformer());
     return stringWriter.toString();
   }
 

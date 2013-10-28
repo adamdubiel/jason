@@ -19,7 +19,7 @@ package com.google.gson.internal.bind;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.RuntimeExclusionStrategy;
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.SerializedName;
@@ -82,7 +82,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     return new ReflectiveTypeAdapterFactory.BoundField(name, serialize, deserialize) {
       final TypeAdapter<?> typeAdapter = context.getAdapter(fieldType);
       @SuppressWarnings({"unchecked", "rawtypes"}) // the type adapter and field type always agree
-      @Override void write(JsonWriter writer, Object value, RuntimeExclusionStrategy exclusionStrategy)
+      @Override void write(JsonWriter writer, Object value, RuntimeTransformer exclusionStrategy)
           throws IOException, IllegalAccessException {
         Object fieldValue = field.get(value);
         TypeAdapter t =
@@ -141,7 +141,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       this.deserialized = deserialized;
     }
 
-    abstract void write(JsonWriter writer, Object value, RuntimeExclusionStrategy exclusionStrategy) throws IOException, IllegalAccessException;
+    abstract void write(JsonWriter writer, Object value, RuntimeTransformer exclusionStrategy) throws IOException, IllegalAccessException;
     abstract void read(JsonReader reader, Object value) throws IOException, IllegalAccessException;
   }
 
@@ -184,7 +184,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       return instance;
     }
 
-    @Override public void write(JsonWriter out, T value, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    @Override public void write(JsonWriter out, T value, RuntimeTransformer transformer) throws IOException {
       if (value == null) {
         out.nullValue();
         return;
@@ -193,9 +193,9 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
       out.beginObject();
       try {
         for (BoundField boundField : boundFields.values()) {
-          if (boundField.serialized && !exclusionStrategy.skipField(type, boundField.name)) {
-            out.name(boundField.name);
-            boundField.write(out, value, exclusionStrategy);
+          if (boundField.serialized && !transformer.skipField(type, boundField.name)) {
+            out.name(transformer.transformName(type, boundField.name));
+            boundField.write(out, transformer.transformValue(type, boundField.name, value), transformer);
           }
         }
       } catch (IllegalAccessException e) {

@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.RuntimeExclusionStrategy;
+import com.google.gson.transform.RuntimeTransformer;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -196,7 +196,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       return map;
     }
 
-    public void write(JsonWriter out, Map<K, V> map, RuntimeExclusionStrategy exclusionStrategy) throws IOException {
+    public void write(JsonWriter out, Map<K, V> map, RuntimeTransformer exclusionStrategy) throws IOException {
       if (map == null) {
         out.nullValue();
         return;

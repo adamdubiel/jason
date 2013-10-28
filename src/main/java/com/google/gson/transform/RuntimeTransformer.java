@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.gson;
+package com.google.gson.transform;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -21,9 +21,11 @@ import com.google.gson.reflect.TypeToken;
  *
  * @author Adam Dubiel
  */
-public class EmptyRuntimeExclusionStrategy implements RuntimeExclusionStrategy {
+public interface RuntimeTransformer {
 
-    public boolean skipField(TypeToken<?> typeToken, String string) {
-        return false;
-    }
+    boolean skipField(TypeToken<?> parentType, String fieldName);
+
+    String transformName(TypeToken<?> parentType, String fieldName);
+
+    <T> Object transformValue(TypeToken<?> parentType, String fieldName, T originalValue);
 }
