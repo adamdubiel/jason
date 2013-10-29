@@ -1,19 +1,7 @@
-/*
- * Copyright 2013 Adam Dubiel, Przemek Hertel.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.bitbucket.adubiel.jason.test.model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -21,20 +9,65 @@ package org.bitbucket.adubiel.jason.test.model;
  */
 public class Parent {
 
+    private long id;
+
     private String name;
 
-    private String nickName;
+    private SingleChild singleChild;
 
-    public Parent(String name, String nickName) {
+    private List<Child> children = new ArrayList<Child>();
+
+    public Parent() {
+    }
+
+    public Parent(long id, String name) {
+        this.id = id;
         this.name = name;
-        this.nickName = nickName;
+    }
+
+    public String getComposite() {
+        return name + id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getNickName() {
-        return nickName;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SingleChild getSingleChild() {
+        return singleChild;
+    }
+
+    public void setSingleChild(SingleChild singleChild) {
+        this.singleChild = singleChild;
+    }
+
+    public Parent withSingleChild(SingleChild singleChild) {
+        setSingleChild(singleChild);
+        return this;
+    }
+
+    public List<Child> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Child> children) {
+        this.children = children;
+    }
+
+    public Parent addChild(Child child) {
+        children.add(child);
+        return this;
     }
 }

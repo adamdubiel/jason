@@ -16,9 +16,7 @@
 package org.bitbucket.adubiel.jason.transform;
 
 import com.google.gson.reflect.TypeToken;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import org.bitbucket.adubiel.jason.filter.AttributeFilter;
 
 /**
  *
@@ -26,7 +24,7 @@ import java.util.Set;
  */
 public class DefaultRuntimeTransformer implements RuntimeTransformer {
 
-    private Map<Class<?>, Set<String>> includedFields = new HashMap<Class<?>, Set<String>>();
+    private AttributeFilter attributeFilters;
 
     private FieldNameTransformer fieldNameTransformer;
 
@@ -34,13 +32,12 @@ public class DefaultRuntimeTransformer implements RuntimeTransformer {
         this.fieldNameTransformer = fieldNameTransformer;
     }
 
-    public DefaultRuntimeTransformer(Map<Class<?>, Set<String>> includedFields) {
-        this.includedFields = includedFields;
+    public DefaultRuntimeTransformer(AttributeFilter attributeFilters) {
+        this.attributeFilters = attributeFilters;
     }
 
     public boolean skipField(TypeToken<?> token, String fieldName) {
-        Set<String> fieldsForClass = includedFields.get(token.getRawType());
-        return fieldsForClass == null || !fieldsForClass.contains(fieldName);
+        return !attributeFilters.allow(token.getRawType(), fieldName);
     }
 
     public String transformName(TypeToken<?> token, String fieldName) {

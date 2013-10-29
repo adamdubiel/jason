@@ -20,10 +20,7 @@ import com.google.gson.GsonBuilder;
 import org.bitbucket.adubiel.jason.transform.DefaultRuntimeTransformer;
 import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
 import com.jayway.jsonassert.JsonAssert;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import org.bitbucket.adubiel.jason.filter.AttributeFilter;
 import org.bitbucket.adubiel.jason.test.model.Parent;
 import org.junit.Test;
 
@@ -37,19 +34,16 @@ public class RuntimeExclusionTest {
     public void shouldSkipNickNameFieldSpecifiedInExclusionStrategy() {
         // given
         Gson gson = new GsonBuilder().create();
-        Parent parent = new Parent("test", "should be skipped");
+        Parent parent = new Parent(1, "should be skipped");
 
-        Map<Class<?>, Set<String>> includes = new HashMap<Class<?>, Set<String>>();
-        includes.put(Parent.class, new HashSet<String>());
-        includes.get(Parent.class).add("name");
-
-        RuntimeTransformer transformer = new DefaultRuntimeTransformer(includes);
+        AttributeFilter filter = new AttributeFilter().filteringClass(Parent.class, new String[] {"id"}, null);
+        RuntimeTransformer transformer = new DefaultRuntimeTransformer(filter);
 
         // when
         String json = gson.toJson(parent, transformer);
 
         // then
-        JsonAssert.with(json).assertEquals("$.name", "test").assertNotDefined("$.nickName");
+        JsonAssert.with(json).assertEquals("$.id", 1).assertNotDefined("$.name");
     }
 
 }

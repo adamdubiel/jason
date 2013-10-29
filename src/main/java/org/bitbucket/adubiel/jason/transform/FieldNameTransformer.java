@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class FieldNameTransformer {
 
-    private Map<Class<?>, Map<String, String>> nameTransformations = new HashMap<Class<?>, Map<String, String>>();
+    private final Map<Class<?>, Map<String, String>> nameTransformations = new HashMap<Class<?>, Map<String, String>>();
 
     public String transformName(Class<?> clazz, String name) {
         Map<String, String> classTransformations = nameTransformations.get(clazz);
