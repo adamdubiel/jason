@@ -19,6 +19,7 @@ package com.google.gson;
 import com.google.gson.annotations.Since;
 import com.google.gson.internal.Excluder;
 import junit.framework.TestCase;
+import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
 
 /**
  * Unit tests for the {@link Excluder} class.
@@ -31,19 +32,19 @@ public class VersionExclusionStrategyTest extends TestCase {
   public void testClassAndFieldAreAtSameVersion() throws Exception {
     Excluder excluder = Excluder.DEFAULT.withVersion(VERSION);
     assertFalse(excluder.excludeClass(MockObject.class, true));
-    assertFalse(excluder.excludeField(MockObject.class.getField("someField"), true));
+    assertFalse(excluder.excludeField(new FieldAttribute(MockObject.class.getField("someField")), true));
   }
 
   public void testClassAndFieldAreBehindInVersion() throws Exception {
     Excluder excluder = Excluder.DEFAULT.withVersion(VERSION + 1);
     assertFalse(excluder.excludeClass(MockObject.class, true));
-    assertFalse(excluder.excludeField(MockObject.class.getField("someField"), true));
+    assertFalse(excluder.excludeField(new FieldAttribute(MockObject.class.getField("someField")), true));
   }
 
   public void testClassAndFieldAreAheadInVersion() throws Exception {
     Excluder excluder = Excluder.DEFAULT.withVersion(VERSION - 1);
     assertTrue(excluder.excludeClass(MockObject.class, true));
-    assertTrue(excluder.excludeField(MockObject.class.getField("someField"), true));
+    assertTrue(excluder.excludeField(new FieldAttribute(MockObject.class.getField("someField")), true));
   }
 
   @Since(VERSION)

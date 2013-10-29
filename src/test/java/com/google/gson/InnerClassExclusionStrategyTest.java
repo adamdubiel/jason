@@ -19,6 +19,7 @@ package com.google.gson;
 import com.google.gson.internal.Excluder;
 import java.lang.reflect.Field;
 import junit.framework.TestCase;
+import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
 
 /**
  * Unit test for GsonBuilder.EXCLUDE_INNER_CLASSES.
@@ -37,7 +38,7 @@ public class InnerClassExclusionStrategyTest extends TestCase {
 
   public void testExcludeInnerClassField() throws Exception {
     Field f = getClass().getField("innerClass");
-    assertTrue(excluder.excludeField(f, true));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), true));
   }
 
   public void testIncludeStaticNestedClassObject() throws Exception {
@@ -47,7 +48,7 @@ public class InnerClassExclusionStrategyTest extends TestCase {
 
   public void testIncludeStaticNestedClassField() throws Exception {
     Field f = getClass().getField("staticNestedClass");
-    assertFalse(excluder.excludeField(f, true));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), true));
   }
 
   class InnerClass {

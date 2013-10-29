@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import java.lang.reflect.Field;
+import org.bitbucket.adubiel.jason.attribute.Attribute;
 
 /**
  * A mechanism for providing custom field naming in Gson.  This allows the client code to translate
@@ -36,5 +36,5 @@ public interface FieldNamingStrategy {
    * @return the translated field name.
    * @since 1.3
    */
-  public String translateName(Field f);
+  public String translateName(Attribute f);
 }

@@ -22,6 +22,7 @@ import com.google.gson.internal.Excluder;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Field;
+import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
 
 /**
  * Unit tests for GsonBuilder.REQUIRE_EXPOSE_DESERIALIZE.
@@ -38,32 +39,32 @@ public class ExposeAnnotationExclusionStrategyTest extends TestCase {
 
   public void testSkipNonAnnotatedFields() throws Exception {
     Field f = createFieldAttributes("hiddenField");
-    assertTrue(excluder.excludeField(f, true));
-    assertTrue(excluder.excludeField(f, false));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), true));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), false));
   }
 
   public void testSkipExplicitlySkippedFields() throws Exception {
     Field f = createFieldAttributes("explicitlyHiddenField");
-    assertTrue(excluder.excludeField(f, true));
-    assertTrue(excluder.excludeField(f, false));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), true));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), false));
   }
 
   public void testNeverSkipExposedAnnotatedFields() throws Exception {
     Field f = createFieldAttributes("exposedField");
-    assertFalse(excluder.excludeField(f, true));
-    assertFalse(excluder.excludeField(f, false));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), true));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), false));
   }
 
   public void testNeverSkipExplicitlyExposedAnnotatedFields() throws Exception {
     Field f = createFieldAttributes("explicitlyExposedField");
-    assertFalse(excluder.excludeField(f, true));
-    assertFalse(excluder.excludeField(f, false));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), true));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), false));
   }
 
   public void testDifferentSerializeAndDeserializeField() throws Exception {
     Field f = createFieldAttributes("explicitlyDifferentModeField");
-    assertFalse(excluder.excludeField(f, true));
-    assertTrue(excluder.excludeField(f, false));
+    assertFalse(excluder.excludeField(new FieldAttribute(f), true));
+    assertTrue(excluder.excludeField(new FieldAttribute(f), false));
   }
 
   private static Field createFieldAttributes(String fieldName) throws Exception {

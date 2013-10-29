@@ -29,7 +29,6 @@ import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.internal.bind.MapTypeAdapterFactory;
 import com.google.gson.internal.bind.ObjectTypeAdapter;
-import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 import com.google.gson.internal.bind.SqlDateTypeAdapter;
 import com.google.gson.internal.bind.TimeTypeAdapter;
 import com.google.gson.internal.bind.TypeAdapters;
@@ -52,6 +51,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bitbucket.adubiel.jason.AnnotationDefinedAccessStrategy;
+import org.bitbucket.adubiel.jason.bind.ReflectiveTypeAdapterFactory;
 
 /**
  * This is the main class for using Gson. Gson is typically used by first constructing a
@@ -242,7 +243,7 @@ public final class Gson {
     factories.add(new CollectionTypeAdapterFactory(constructorConstructor));
     factories.add(new MapTypeAdapterFactory(constructorConstructor, complexMapKeySerialization));
     factories.add(new ReflectiveTypeAdapterFactory(
-        constructorConstructor, fieldNamingPolicy, excluder));
+        constructorConstructor, fieldNamingPolicy, excluder, new AnnotationDefinedAccessStrategy()));
 
     this.factories = Collections.unmodifiableList(factories);
   }

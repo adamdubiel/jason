@@ -16,6 +16,8 @@
 
 package com.google.gson;
 
+import org.bitbucket.adubiel.jason.attribute.Attribute;
+
 /**
  * A strategy (or policy) definition that is used to decide whether or not a field or top-level
  * class should be serialized or deserialized as part of the JSON output/input. For serialization,
@@ -99,7 +101,7 @@ public interface ExclusionStrategy {
    * @param f the field object that is under test
    * @return true if the field should be ignored; otherwise false
    */
-  public boolean shouldSkipField(FieldAttributes f);
+  public boolean shouldSkipField(Attribute f);
 
   /**
    * @param clazz the class object that is under test

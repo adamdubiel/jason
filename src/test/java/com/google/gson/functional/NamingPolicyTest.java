@@ -24,8 +24,8 @@ import com.google.gson.common.TestTypes.ClassWithSerializedNameFields;
 import com.google.gson.common.TestTypes.StringWrapper;
 
 import junit.framework.TestCase;
+import org.bitbucket.adubiel.jason.attribute.Attribute;
 
-import java.lang.reflect.Field;
 
 /**
  * Functional tests for naming policies.
@@ -154,7 +154,7 @@ public class NamingPolicyTest extends TestCase {
   }
 
   private static class UpperCaseNamingStrategy implements FieldNamingStrategy {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return f.getName().toUpperCase();
     }
   }

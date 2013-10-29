@@ -17,7 +17,6 @@
 package com.google.gson.internal;
 
 import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
 import com.google.gson.TypeAdapter;
@@ -29,11 +28,11 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.bitbucket.adubiel.jason.attribute.Attribute;
 
 /**
  * This class selects which fields and types to omit. It is configurable,
@@ -147,9 +146,9 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     };
   }
 
-  public boolean excludeField(Field field, boolean serialize) {
+  public boolean excludeField(Attribute field, boolean serialize) {
     if ((modifiers & field.getModifiers()) != 0) {
-      return true;
+        return true;
     }
 
     if (version != Excluder.IGNORE_VERSIONS
@@ -168,19 +167,18 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
       }
     }
 
-    if (!serializeInnerClasses && isInnerClass(field.getType())) {
+    if (!serializeInnerClasses && isInnerClass(field.getDeclaredClass())) {
       return true;
     }
 
-    if (isAnonymousOrLocal(field.getType())) {
+    if (isAnonymousOrLocal(field.getDeclaredClass())) {
       return true;
     }
 
     List<ExclusionStrategy> list = serialize ? serializationStrategies : deserializationStrategies;
     if (!list.isEmpty()) {
-      FieldAttributes fieldAttributes = new FieldAttributes(field);
       for (ExclusionStrategy runtimeTransformer : list) {
-        if (runtimeTransformer.shouldSkipField(fieldAttributes)) {
+        if (runtimeTransformer.shouldSkipField(field)) {
           return true;
         }
       }

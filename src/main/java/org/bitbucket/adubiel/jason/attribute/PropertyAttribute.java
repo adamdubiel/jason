@@ -66,14 +66,16 @@ public class PropertyAttribute implements Attribute {
         return (readMethod.getModifiers() & modifier) != 0;
     }
 
-    public Object get(Object instance) throws IllegalAccessException {
-        try {
-            return readMethod.invoke(instance);
-        } catch (IllegalArgumentException argumentException) {
-            throw new IllegalAccessException();
-        } catch (InvocationTargetException invocationTargetException) {
-            throw new IllegalAccessException();
-        }
+    public int getModifiers() {
+        return readMethod.getModifiers();
+    }
+
+    public Object get(Object instance) throws IllegalAccessException, InvocationTargetException, IllegalArgumentException {
+        return readMethod.invoke(instance);
+    }
+
+    public void set(Object instance, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        descriptor.getWriteMethod().invoke(instance, value);
     }
 
     public boolean isSynthetic() {

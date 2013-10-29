@@ -16,6 +16,8 @@
 
 package com.google.gson;
 
+import org.bitbucket.adubiel.jason.attribute.Attribute;
+
 /**
  * This is a configurable {@link ExclusionStrategy} that can be used for
  * unit testing.
@@ -31,7 +33,7 @@ final class MockExclusionStrategy implements ExclusionStrategy {
     this.skipField = skipField;
   }
 
-  public boolean shouldSkipField(FieldAttributes f) {
+  public boolean shouldSkipField(Attribute f) {
     return skipField;
   }
 

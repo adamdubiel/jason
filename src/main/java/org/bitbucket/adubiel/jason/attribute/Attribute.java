@@ -16,6 +16,7 @@
 package org.bitbucket.adubiel.jason.attribute;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
@@ -39,7 +40,11 @@ public interface Attribute {
 
     boolean hasModifier(int modifier);
 
-    Object get(Object instance) throws IllegalAccessException;
+    int getModifiers();
+
+    Object get(Object instance) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+
+    void set(Object instance, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
     boolean isSynthetic();
 }

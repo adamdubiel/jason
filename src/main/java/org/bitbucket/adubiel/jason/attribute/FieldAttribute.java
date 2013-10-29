@@ -63,8 +63,16 @@ public class FieldAttribute implements Attribute {
         return (field.getModifiers() & modifier) != 0;
     }
 
+    public int getModifiers() {
+        return field.getModifiers();
+    }
+
     public Object get(Object instance) throws IllegalAccessException {
         return field.get(instance);
+    }
+
+    public void set(Object instance, Object value) throws IllegalAccessException {
+        field.set(instance, value);
     }
 
     public boolean isSynthetic() {

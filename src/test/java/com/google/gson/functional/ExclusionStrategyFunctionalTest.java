@@ -17,7 +17,6 @@
 package com.google.gson.functional;
 
 import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -27,6 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import junit.framework.TestCase;
+import org.bitbucket.adubiel.jason.attribute.Attribute;
 
 /**
  * Performs some functional tests when Gson is instantiated with some common user defined
@@ -37,7 +37,7 @@ import junit.framework.TestCase;
  */
 public class ExclusionStrategyFunctionalTest extends TestCase {
   private static final ExclusionStrategy EXCLUDE_SAMPLE_OBJECT_FOR_TEST = new ExclusionStrategy() {
-    public boolean shouldSkipField(FieldAttributes f) {
+    public boolean shouldSkipField(Attribute f) {
       return false;
     }
     public boolean shouldSkipClass(Class<?> clazz) {
@@ -195,7 +195,7 @@ public class ExclusionStrategyFunctionalTest extends TestCase {
       return (clazz == typeToSkip);
     }
 
-    public boolean shouldSkipField(FieldAttributes f) {
+    public boolean shouldSkipField(Attribute f) {
       return f.getAnnotation(Foo.class) != null;
     }
   }

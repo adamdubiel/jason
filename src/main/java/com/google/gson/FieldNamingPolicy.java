@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import java.lang.reflect.Field;
+import org.bitbucket.adubiel.jason.attribute.Attribute;
 
 /**
  * An enumeration that defines a few standard naming conventions for JSON field names.
@@ -34,7 +34,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
    * unchanged.
    */
   IDENTITY() {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return f.getName();
     }
   },
@@ -50,7 +50,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
    * </ul>
    */
   UPPER_CAMEL_CASE() {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return upperCaseFirstLetter(f.getName());
     }
   },
@@ -69,7 +69,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
    * @since 1.4
    */
   UPPER_CAMEL_CASE_WITH_SPACES() {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return upperCaseFirstLetter(separateCamelCase(f.getName(), " "));
     }
   },
@@ -87,7 +87,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
    * </ul>
    */
   LOWER_CASE_WITH_UNDERSCORES() {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return separateCamelCase(f.getName(), "_").toLowerCase();
     }
   },
@@ -110,7 +110,7 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
    * @since 1.4
    */
   LOWER_CASE_WITH_DASHES() {
-    public String translateName(Field f) {
+    public String translateName(Attribute f) {
       return separateCamelCase(f.getName(), "-").toLowerCase();
     }
   };
