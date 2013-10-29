@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Adapt an array of objects.
@@ -56,8 +57,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
   private final TypeAdapter<E> componentTypeAdapter;
 
   public ArrayTypeAdapter(Gson context, TypeAdapter<E> componentTypeAdapter, Class<E> componentType) {
-    this.componentTypeAdapter =
-      new TypeAdapterRuntimeTypeWrapper<E>(context, componentTypeAdapter, componentType);
+    this.componentTypeAdapter = new TypeAdapterRuntimeTypeWrapper<E>(context, componentTypeAdapter, componentType);
     this.componentType = componentType;
   }
 

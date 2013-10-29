@@ -37,6 +37,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Adapts maps to either JSON objects or JSON arrays.

@@ -30,6 +30,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Adapt a homogeneous collection of objects.

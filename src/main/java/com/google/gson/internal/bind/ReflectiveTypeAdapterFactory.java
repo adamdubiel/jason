@@ -43,6 +43,7 @@ import java.util.*;
 import org.bitbucket.adubiel.jason.attribute.Attribute;
 import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
 import org.bitbucket.adubiel.jason.attribute.PropertyAttribute;
+import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Type adapter that reflects over the fields and methods of a class.
