@@ -56,7 +56,7 @@ final class AttributesExtractor {
     static Collection<Attribute> extractFromProperties(Class<?> clazz) {
         List<Attribute> attributes = new ArrayList<Attribute>();
         try {
-            for (PropertyDescriptor property : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
+            for (PropertyDescriptor property : Introspector.getBeanInfo(clazz, clazz.getSuperclass()).getPropertyDescriptors()) {
                 attributes.add(new PropertyAttribute(property));
             }
         } catch (IntrospectionException e) {

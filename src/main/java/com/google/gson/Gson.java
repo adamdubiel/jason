@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bitbucket.adubiel.jason.AccessStrategy;
 import org.bitbucket.adubiel.jason.AnnotationDefinedAccessStrategy;
 import org.bitbucket.adubiel.jason.bind.ReflectiveTypeAdapterFactory;
 
@@ -176,13 +177,14 @@ public final class Gson {
    * </ul>
    */
   public Gson() {
-    this(Excluder.DEFAULT, FieldNamingPolicy.IDENTITY,
+    this(Excluder.DEFAULT, FieldNamingPolicy.IDENTITY, new AnnotationDefinedAccessStrategy(),
         Collections.<Type, InstanceCreator<?>>emptyMap(), false, false, DEFAULT_JSON_NON_EXECUTABLE,
         true, false, false, LongSerializationPolicy.DEFAULT,
         Collections.<TypeAdapterFactory>emptyList());
   }
 
   Gson(final Excluder excluder, final FieldNamingStrategy fieldNamingPolicy,
+      final AccessStrategy accessStrategy,
       final Map<Type, InstanceCreator<?>> instanceCreators, boolean serializeNulls,
       boolean complexMapKeySerialization, boolean generateNonExecutableGson, boolean htmlSafe,
       boolean prettyPrinting, boolean serializeSpecialFloatingPointValues,
@@ -243,7 +245,7 @@ public final class Gson {
     factories.add(new CollectionTypeAdapterFactory(constructorConstructor));
     factories.add(new MapTypeAdapterFactory(constructorConstructor, complexMapKeySerialization));
     factories.add(new ReflectiveTypeAdapterFactory(
-        constructorConstructor, fieldNamingPolicy, excluder, new AnnotationDefinedAccessStrategy()));
+        constructorConstructor, fieldNamingPolicy, excluder, accessStrategy));
 
     this.factories = Collections.unmodifiableList(factories);
   }

@@ -45,6 +45,10 @@ public class Parent {
         this.name = name;
     }
 
+    public String getGetterName() {
+        return name;
+    }
+
     public SingleChild getSingleChild() {
         return singleChild;
     }

@@ -30,6 +30,8 @@ import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.reflect.TypeToken;
+import org.bitbucket.adubiel.jason.AccessStrategy;
+import org.bitbucket.adubiel.jason.AnnotationDefinedAccessStrategy;
 
 /**
  * <p>Use this builder to construct a {@link Gson} instance when you need to set configuration
@@ -69,6 +71,7 @@ public final class GsonBuilder {
   private Excluder excluder = Excluder.DEFAULT;
   private LongSerializationPolicy longSerializationPolicy = LongSerializationPolicy.DEFAULT;
   private FieldNamingStrategy fieldNamingPolicy = FieldNamingPolicy.IDENTITY;
+  private AccessStrategy accessStrategy = new AnnotationDefinedAccessStrategy();
   private final Map<Type, InstanceCreator<?>> instanceCreators
       = new HashMap<Type, InstanceCreator<?>>();
   private final List<TypeAdapterFactory> factories = new ArrayList<TypeAdapterFactory>();
@@ -287,6 +290,11 @@ public final class GsonBuilder {
   public GsonBuilder setFieldNamingStrategy(FieldNamingStrategy fieldNamingStrategy) {
     this.fieldNamingPolicy = fieldNamingStrategy;
     return this;
+  }
+
+  public GsonBuilder setAccessStrategy(AccessStrategy accessStrategy) {
+      this.accessStrategy = accessStrategy;
+      return this;
   }
 
   /**
@@ -542,7 +550,7 @@ public final class GsonBuilder {
     factories.addAll(this.hierarchyFactories);
     addTypeAdaptersForDate(datePattern, dateStyle, timeStyle, factories);
 
-    return new Gson(excluder, fieldNamingPolicy, instanceCreators,
+    return new Gson(excluder, fieldNamingPolicy, accessStrategy, instanceCreators,
         serializeNulls, complexMapKeySerialization,
         generateNonExecutableJson, escapeHtmlChars, prettyPrinting,
         serializeSpecialFloatingPointValues, longSerializationPolicy, factories);
