@@ -12,29 +12,50 @@ import java.util.Map;
  */
 public class AttributeFilter {
 
-    private static final AttributeFilterOptions emptyFilter = AttributeFilterOptions.empty();
+    private static final AttributeFilterOptions EMPTY_FILTER = AttributeFilterOptions.empty();
 
-    private final AttributeFilterOptions globalFilter;
+    private final AttributeFilterOptions globalFilter = EMPTY_FILTER;
 
     private final Map<Class<?>, AttributeFilterOptions> classFilters = new HashMap<Class<?>, AttributeFilterOptions>();
 
     public AttributeFilter() {
-        globalFilter = emptyFilter;
     }
 
-    public AttributeFilter(String[] globalIncludes, String[] globalExcludes) {
-        globalFilter = new AttributeFilterOptions(globalIncludes, globalExcludes);
-    }
-
-    public AttributeFilter filteringClass(Class<?> targetClass, String[] includes, String[] excludes) {
-        classFilters.put(targetClass, new AttributeFilterOptions(includes, excludes));
+    public AttributeFilter including(String... globalIncludes) {
+        globalFilter.including(globalIncludes);
         return this;
+    }
+
+    public AttributeFilter excluding(String... globalExcludes) {
+        globalFilter.excluding(globalExcludes);
+        return this;
+    }
+
+    public AttributeFilter including(Class<?> targetClass, String... includes) {
+        AttributeFilterOptions classFilter = getClassFilter(targetClass);
+        classFilter.including(includes);
+        return this;
+    }
+
+    public AttributeFilter excluding(Class<?> targetClass, String... excludes) {
+        AttributeFilterOptions classFilter = getClassFilter(targetClass);
+        classFilter.excluding(excludes);
+        return this;
+    }
+
+    private AttributeFilterOptions getClassFilter(Class<?> targetClass) {
+        AttributeFilterOptions classFilter = classFilters.get(targetClass);
+        if (classFilter == null) {
+            classFilter = new AttributeFilterOptions();
+            classFilters.put(targetClass, classFilter);
+        }
+        return classFilter;
     }
 
     public boolean allow(Class<?> fieldClass, String fieldName) {
         AttributeFilterOptions classFilter = classFilters.get(fieldClass);
         if (classFilter == null) {
-            classFilter = emptyFilter;
+            classFilter = EMPTY_FILTER;
         }
 
         if (globalFilter.exclude(fieldName)) {

@@ -14,7 +14,7 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowFieldWhenIncludedInClassFilter() {
         // given
-        AttributeFilter filter = new AttributeFilter(null, null).filteringClass(Parent.class, new String[]{"name"}, null);
+        AttributeFilter filter = new AttributeFilter().including(Parent.class, "name");
 
         // when
         boolean allow = filter.allow(Parent.class, "name");
@@ -26,7 +26,7 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowAllFieldsByDefault() {
         // given
-        AttributeFilter filter = new AttributeFilter(null, null);
+        AttributeFilter filter = new AttributeFilter();
 
         // when
         boolean allow = filter.allow(Parent.class, "name");
@@ -38,7 +38,7 @@ public class AttributeFilterTest {
     @Test
     public void shouldNotAllowFieldWhenExcludedInClassFilter() {
         // given
-        AttributeFilter filter = new AttributeFilter(null, null).filteringClass(Parent.class, null, new String[]{"name"});
+        AttributeFilter filter = new AttributeFilter().excluding(Parent.class, "name");
 
         // when
         boolean allow = filter.allow(Parent.class, "name");
@@ -50,7 +50,7 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowOnlyFieldsFromIncludeIfDefined() {
         // given
-        AttributeFilter filter = new AttributeFilter(new String[]{"name"}, null);
+        AttributeFilter filter = new AttributeFilter().including("name");
 
         // when
         boolean allow = filter.allow(Parent.class, "id");
@@ -62,8 +62,8 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowFieldIfExplicitlyIncludedInClassEvenIfExcludedGlobally() {
         // given
-        AttributeFilter filter = new AttributeFilter(null, new String[]{"name"})
-                .filteringClass(Parent.class, new String[]{"name"}, null);
+        AttributeFilter filter = new AttributeFilter().excluding("name")
+                .including(Parent.class, "name");
 
         // when
         boolean allow = filter.allow(Parent.class, "name");
@@ -75,9 +75,9 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowOnlyFieldFromClassWhichHasItIncluded() {
         // given
-        AttributeFilter filter = new AttributeFilter(null, null)
-                .filteringClass(Parent.class, new String[]{"id"}, null)
-                .filteringClass(SingleChild.class, new String[]{"name"}, null);
+        AttributeFilter filter = new AttributeFilter()
+                .including(Parent.class, "id")
+                .including(SingleChild.class, "name");
 
         // when
         boolean allow = filter.allow(Parent.class, "name");

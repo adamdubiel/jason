@@ -31,12 +31,12 @@ import org.junit.Test;
 public class RuntimeExclusionTest {
 
     @Test
-    public void shouldSkipNickNameFieldSpecifiedInExclusionStrategy() {
+    public void shouldSkipNickNameFieldSpecifiedInRuntimeFilters() {
         // given
         Gson gson = new GsonBuilder().create();
         Parent parent = new Parent(1, "should be skipped");
 
-        AttributeFilter filter = new AttributeFilter().filteringClass(Parent.class, new String[] {"id"}, null);
+        AttributeFilter filter = new AttributeFilter().including(Parent.class, "id");
         RuntimeTransformer transformer = new DefaultRuntimeTransformer(filter);
 
         // when

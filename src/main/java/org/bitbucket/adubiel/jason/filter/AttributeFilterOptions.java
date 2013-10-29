@@ -13,21 +13,24 @@ class AttributeFilterOptions {
 
     private final HashSet<String> exclude = new HashSet<String>();
 
-    private final boolean checkIncludes;
+    private boolean checkIncludes = false;
 
     static AttributeFilterOptions empty() {
-        return new AttributeFilterOptions(null, null);
+        return new AttributeFilterOptions();
     }
 
-    AttributeFilterOptions(String[] includes, String[] excludes) {
-        if (includes != null) {
-            include.addAll(Arrays.asList(includes));
-        }
-        checkIncludes = !include.isEmpty();
+    AttributeFilterOptions() {
+    }
 
-        if (excludes != null) {
-            exclude.addAll(Arrays.asList(excludes));
-        }
+    void including(String... includes) {
+        include.clear();
+        include.addAll(Arrays.asList(includes));
+        checkIncludes = !include.isEmpty();
+    }
+
+    void excluding(String... excludes) {
+        exclude.clear();
+        exclude.addAll(Arrays.asList(excludes));
     }
 
     boolean exclude(String fieldName) {
