@@ -26,9 +26,18 @@ public class FieldNameTransformer {
 
     private final Map<Class<?>, Map<String, String>> nameTransformations = new HashMap<Class<?>, Map<String, String>>();
 
+    public void transforming(Class<?> clazz, String name, String transformedName) {
+        Map<String, String> classTransformations = nameTransformations.get(clazz);
+        if (classTransformations == null) {
+            classTransformations = new HashMap<String, String>();
+            nameTransformations.put(clazz, classTransformations);
+        }
+        classTransformations.put(name, transformedName);
+    }
+
     public String transformName(Class<?> clazz, String name) {
         Map<String, String> classTransformations = nameTransformations.get(clazz);
-        if (nameTransformations != null) {
+        if (classTransformations != null) {
             String transformedName = classTransformations.get(name);
             return transformedName != null ? transformedName : name;
         }

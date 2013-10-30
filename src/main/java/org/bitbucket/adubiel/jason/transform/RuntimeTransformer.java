@@ -26,6 +26,4 @@ public interface RuntimeTransformer {
     boolean skipField(TypeToken<?> parentType, String fieldName);
 
     String transformName(TypeToken<?> parentType, String fieldName);
-
-    <T> Object transformValue(TypeToken<?> parentType, String fieldName, T originalValue);
 }

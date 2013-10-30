@@ -30,8 +30,4 @@ public class EmptyRuntimeTransformer implements RuntimeTransformer {
     public String transformName(TypeToken<?> parentType, String fieldName) {
         return fieldName;
     }
-
-    public <T> T transformValue(TypeToken<?> parentType, String fieldName, T originalValue) {
-        return originalValue;
-    }
 }

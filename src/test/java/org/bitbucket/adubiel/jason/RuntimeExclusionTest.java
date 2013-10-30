@@ -24,6 +24,8 @@ import org.bitbucket.adubiel.jason.filter.AttributeFilter;
 import org.bitbucket.adubiel.jason.test.model.Parent;
 import org.junit.Test;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+
 /**
  *
  * @author Adam Dubiel
@@ -31,7 +33,7 @@ import org.junit.Test;
 public class RuntimeExclusionTest {
 
     @Test
-    public void shouldSkipNickNameFieldSpecifiedInRuntimeFilters() {
+    public void shouldSkipNameFieldSpecifiedInRuntimeFiltersOnSerialization() {
         // given
         Gson gson = new GsonBuilder().create();
         Parent parent = new Parent(1, "should be skipped");
@@ -44,6 +46,23 @@ public class RuntimeExclusionTest {
 
         // then
         JsonAssert.with(json).assertEquals("$.id", 1).assertNotDefined("$.name");
+    }
+
+    @Test
+    public void shouldSkipNameFieldSpecifiedInRuntimeFiltersOnDeserialization() {
+        // given
+        Gson gson = new GsonBuilder().create();
+        String parentJson = "{ id: 1, name: \"should be skipped\" }";
+
+        AttributeFilter filter = new AttributeFilter().including(Parent.class, "id");
+        RuntimeTransformer transformer = new DefaultRuntimeTransformer(filter);
+
+        // when
+        Parent parent = gson.fromJson(parentJson, Parent.class, transformer);
+
+        // then
+        assertThat(parent.getId()).isEqualTo(1);
+        assertThat(parent.getName()).isNull();
     }
 
 }

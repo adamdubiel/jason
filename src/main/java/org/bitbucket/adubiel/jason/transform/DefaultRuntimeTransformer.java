@@ -24,10 +24,21 @@ import org.bitbucket.adubiel.jason.filter.AttributeFilter;
  */
 public class DefaultRuntimeTransformer implements RuntimeTransformer {
 
-    private final AttributeFilter attributeFilters;
+    private AttributeFilter attributeFilters;
+
+    private FieldNameTransformer nameTransformer;
 
     public DefaultRuntimeTransformer(AttributeFilter attributeFilters) {
         this.attributeFilters = attributeFilters;
+    }
+
+    public DefaultRuntimeTransformer(FieldNameTransformer nameTransformer) {
+        this.nameTransformer = nameTransformer;
+    }
+
+    public DefaultRuntimeTransformer(AttributeFilter attributeFilters, FieldNameTransformer nameTransformer) {
+        this.attributeFilters = attributeFilters;
+        this.nameTransformer = nameTransformer;
     }
 
     public boolean skipField(TypeToken<?> token, String fieldName) {
@@ -35,10 +46,6 @@ public class DefaultRuntimeTransformer implements RuntimeTransformer {
     }
 
     public String transformName(TypeToken<?> token, String fieldName) {
-        return fieldName;
-    }
-
-    public <T> Object transformValue(TypeToken<?> token, String fieldName, T originalValue) {
-        return originalValue;
+        return nameTransformer.transformName(token.getRawType(), fieldName);
     }
 }

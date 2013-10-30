@@ -91,7 +91,7 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
             for (BoundField boundField : boundFields.values()) {
                 if (boundField.serialized && !transformer.skipField(type, boundField.name)) {
                     out.name(transformer.transformName(type, boundField.name));
-                    boundField.write(out, transformer.transformValue(type, boundField.name, value), transformer);
+                    boundField.write(out, value, transformer);
                 }
             }
         } catch (IllegalAccessException e) {
