@@ -57,9 +57,9 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
         try {
             in.beginObject();
             while (in.hasNext()) {
-                String name = in.nextName();
+                String name = runtimeTransformer.transformName(type, in.nextName());
                 BoundField field = boundFields.get(name);
-                if (field == null || !field.deserialized) {
+                if (field == null || !field.deserialized || runtimeTransformer.skipField(type, name)) {
                     in.skipValue();
                 } else {
                     field.read(in, instance, runtimeTransformer);
