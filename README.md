@@ -10,10 +10,7 @@ though - runtime filtering. Filters (or excluders) need to be defined up front,
 before `gson` object is built. Jason aims at bringing runtime excluders passed
 on serialize/deserialize method call.
 
-## Why fork?
-
-To show that it is possible. In the meantime i will try to contact Gson maintainers
-and try to merge functionalities.
+This project is here to show that it is possible. I will try to contact Gson authors to merge code.
 
 ## What's new?
 
@@ -75,4 +72,10 @@ Attribute filtering precedence:
 By default getter serialization can be turned on using `@JasonAccess(strategy = AccessStrategyType.PROPERTY)` annotation
 on class level. You can define own access strategy by providing own implementation of `AccessStrategy`.
 
-**Warning** There is no support for deserialization. Classes which are serialized using getters **can't be deserialized**!
+**Warning!** There is no support for deserialization. Classes which are serialized using getters **can't be deserialized**!
+
+## Compatibility
+
+The only thing that needs to be changed after moving to Jason is `ExclusionStrategy` implementations signature. Instead
+of `FieldAttributes` interface `skipField` method now accepts `Attribute`, which can be either field or property (getter).
+`Attribute` interface offers same possibilities as `FieldAttribute`.
