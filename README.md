@@ -1,7 +1,7 @@
 # Jason
 
 Jason is an elastic JSON serializer/deserializer based on Google Gson 2.2.4 code.
-For more on Gson visit (Google Code page)[http://code.google.com/p/google-gson].
+For more on Gson visit [Google Code page](http://code.google.com/p/google-gson).
 
 ## Why?
 
