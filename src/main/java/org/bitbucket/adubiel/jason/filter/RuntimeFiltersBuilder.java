@@ -39,6 +39,10 @@ public final class RuntimeFiltersBuilder {
     }
 
     public RuntimeFilters build() {
+        if(emptyExclusionFilter && emptyNamingFilter) {
+            return new EmptyRuntimeFilters();
+        }
+
         ExclusionFilter exclusionFilter = emptyExclusionFilter ? new EmptyExclusionFilter() : attributeExclusionFilter;
         NamingFilter namingFilter = emptyNamingFilter ? new EmptyNamingFilter() : defautNamingFilter;
 

@@ -9,7 +9,7 @@ import static org.fest.assertions.api.Assertions.*;
  *
  * @author Adam Dubiel
  */
-public class AttributeFilterTest {
+public class AttributeExclusionFilterTest {
 
     @Test
     public void shouldAllowFieldWhenIncludedInClassFilter() {
