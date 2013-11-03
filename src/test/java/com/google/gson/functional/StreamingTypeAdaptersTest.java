@@ -16,7 +16,7 @@
 
 package com.google.gson.functional;
 
-import org.bitbucket.adubiel.jason.transform.EmptyRuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.EmptyRuntimeFilters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -209,7 +209,7 @@ public final class StreamingTypeAdaptersTest extends TestCase {
     passengersArray.add(jesseObject);
     truckObject.add("passengers", passengersArray);
 
-    Truck truck = truckAdapter.fromJsonTree(truckObject, new EmptyRuntimeTransformer());
+    Truck truck = truckAdapter.fromJsonTree(truckObject, new EmptyRuntimeFilters());
     assertEquals(300.0, truck.horsePower);
     assertEquals(Arrays.asList(new Person("Jesse", 30)), truck.passengers);
   }
@@ -250,7 +250,7 @@ public final class StreamingTypeAdaptersTest extends TestCase {
   private static <T> String toJson(TypeAdapter<T> typeAdapter, T value) throws IOException {
     StringWriter stringWriter = new StringWriter();
     JsonWriter writer = new JsonWriter(stringWriter);
-    typeAdapter.write(writer, value, new EmptyRuntimeTransformer());
+    typeAdapter.write(writer, value, new EmptyRuntimeFilters());
     return stringWriter.toString();
   }
 
@@ -258,6 +258,6 @@ public final class StreamingTypeAdaptersTest extends TestCase {
   private <T> T fromJson(TypeAdapter<T> typeAdapter, String json) throws IOException {
     JsonReader reader = new JsonReader(new StringReader(json));
     reader.setLenient(true); // TODO: non-lenient?
-    return typeAdapter.read(reader, new EmptyRuntimeTransformer());
+    return typeAdapter.read(reader, new EmptyRuntimeFilters());
   }
 }

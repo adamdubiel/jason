@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bitbucket.adubiel.jason.transform;
+package org.bitbucket.adubiel.jason.filter;
 
 import java.util.HashMap;
 import java.util.Map;

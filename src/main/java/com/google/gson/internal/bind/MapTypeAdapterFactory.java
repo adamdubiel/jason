@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -159,7 +159,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       this.constructor = constructor;
     }
 
-    public Map<K, V> read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+    public Map<K, V> read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
       JsonToken peek = in.peek();
       if (peek == JsonToken.NULL) {
         in.nextNull();
@@ -172,8 +172,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         in.beginArray();
         while (in.hasNext()) {
           in.beginArray(); // entry array
-          K key = keyTypeAdapter.read(in, runtimeTransformer);
-          V value = valueTypeAdapter.read(in, runtimeTransformer);
+          K key = keyTypeAdapter.read(in, runtimeFilters);
+          V value = valueTypeAdapter.read(in, runtimeFilters);
           V replaced = map.put(key, value);
           if (replaced != null) {
             throw new JsonSyntaxException("duplicate key: " + key);
@@ -185,8 +185,8 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         in.beginObject();
         while (in.hasNext()) {
           JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
-          K key = keyTypeAdapter.read(in, runtimeTransformer);
-          V value = valueTypeAdapter.read(in, runtimeTransformer);
+          K key = keyTypeAdapter.read(in, runtimeFilters);
+          V value = valueTypeAdapter.read(in, runtimeFilters);
           V replaced = map.put(key, value);
           if (replaced != null) {
             throw new JsonSyntaxException("duplicate key: " + key);
@@ -197,7 +197,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
       return map;
     }
 
-    public void write(JsonWriter out, Map<K, V> map, RuntimeTransformer runtimeTransformer) throws IOException {
+    public void write(JsonWriter out, Map<K, V> map, RuntimeFilters runtimeFilters) throws IOException {
       if (map == null) {
         out.nullValue();
         return;
@@ -207,7 +207,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         out.beginObject();
         for (Map.Entry<K, V> entry : map.entrySet()) {
           out.name(String.valueOf(entry.getKey()));
-          valueTypeAdapter.write(out, entry.getValue(), runtimeTransformer);
+          valueTypeAdapter.write(out, entry.getValue(), runtimeFilters);
         }
         out.endObject();
         return;
@@ -218,7 +218,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
 
       List<V> values = new ArrayList<V>(map.size());
       for (Map.Entry<K, V> entry : map.entrySet()) {
-        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey(), runtimeTransformer);
+        JsonElement keyElement = keyTypeAdapter.toJsonTree(entry.getKey(), runtimeFilters);
         keys.add(keyElement);
         values.add(entry.getValue());
         hasComplexKeys |= keyElement.isJsonArray() || keyElement.isJsonObject();
@@ -229,7 +229,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         for (int i = 0; i < keys.size(); i++) {
           out.beginArray(); // entry array
           Streams.write(keys.get(i), out);
-          valueTypeAdapter.write(out, values.get(i), runtimeTransformer);
+          valueTypeAdapter.write(out, values.get(i), runtimeFilters);
           out.endArray();
         }
         out.endArray();
@@ -238,7 +238,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         for (int i = 0; i < keys.size(); i++) {
           JsonElement keyElement = keys.get(i);
           out.name(keyToString(keyElement));
-          valueTypeAdapter.write(out, values.get(i), runtimeTransformer);
+          valueTypeAdapter.write(out, values.get(i), runtimeFilters);
         }
         out.endObject();
       }

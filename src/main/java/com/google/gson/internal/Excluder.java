@@ -18,7 +18,7 @@ package com.google.gson.internal;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.Expose;
@@ -93,17 +93,17 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     return result;
   }
 
-  public Excluder withExclusionStrategy(ExclusionStrategy runtimeTransformer,
+  public Excluder withExclusionStrategy(ExclusionStrategy runtimeFilters,
       boolean serialization, boolean deserialization) {
     Excluder result = clone();
     if (serialization) {
       result.serializationStrategies = new ArrayList<ExclusionStrategy>(serializationStrategies);
-      result.serializationStrategies.add(runtimeTransformer);
+      result.serializationStrategies.add(runtimeFilters);
     }
     if (deserialization) {
       result.deserializationStrategies
           = new ArrayList<ExclusionStrategy>(deserializationStrategies);
-      result.deserializationStrategies.add(runtimeTransformer);
+      result.deserializationStrategies.add(runtimeFilters);
     }
     return result;
   }
@@ -121,20 +121,20 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
       /** The delegate is lazily created because it may not be needed, and creating it may fail. */
       private TypeAdapter<T> delegate;
 
-      @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+      @Override public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
         if (skipDeserialize) {
           in.skipValue();
           return null;
         }
-        return delegate().read(in, runtimeTransformer);
+        return delegate().read(in, runtimeFilters);
       }
 
-      @Override public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
+      @Override public void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException {
         if (skipSerialize) {
           out.nullValue();
           return;
         }
-        delegate().write(out, value, runtimeTransformer);
+        delegate().write(out, value, runtimeFilters);
       }
 
       private TypeAdapter<T> delegate() {
@@ -177,8 +177,8 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
 
     List<ExclusionStrategy> list = serialize ? serializationStrategies : deserializationStrategies;
     if (!list.isEmpty()) {
-      for (ExclusionStrategy runtimeTransformer : list) {
-        if (runtimeTransformer.shouldSkipField(field)) {
+      for (ExclusionStrategy runtimeFilters : list) {
+        if (runtimeFilters.shouldSkipField(field)) {
           return true;
         }
       }
@@ -202,8 +202,8 @@ public final class Excluder implements TypeAdapterFactory, Cloneable {
     }
 
     List<ExclusionStrategy> list = serialize ? serializationStrategies : deserializationStrategies;
-    for (ExclusionStrategy runtimeTransformer : list) {
-      if (runtimeTransformer.shouldSkipClass(clazz)) {
+    for (ExclusionStrategy runtimeFilters : list) {
+      if (runtimeFilters.shouldSkipClass(clazz)) {
         return true;
       }
     }

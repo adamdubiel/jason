@@ -25,13 +25,12 @@ To define runtime filter that will allow **only** *name* fields:
 
 ```java
 // given
-AttributeFilter attributeFilter = new AttributeFilter().including("name");
-RuntimeTransformer transformer = new RuntimeTransformer(attributeFilter);
+RuntimeFilters filters = new RuntimeFiltersBuilder().including("name").build();
 
 DummyClass dummy = DummyClassBuilder.dummyClass().withName("dummy").build();
 
 // when
-Strign json = gson.toJson(dummy, transformer);
+Strign json = gson.toJson(dummy, filters);
 
 // then
 assertThat(json).isEqualTo("{name: \"dummy\"}");
@@ -41,14 +40,13 @@ Runtime filter that will restrict fields only on chosen class:
 
 ```java
 // given
-AttributeFilter attributeFilter = new AttributeFilter().including(DummyClass.class, "name", "id");
-RuntimeTransformer transformer = new RuntimeTransformer(attributeFilter);
+RuntimeFilters filters = new RuntimeFiltersBuilder().including(DummyClass.class, "name", "id").build();
 
 DummyClass dummy = DummyClassBuilder.dummyClass().withName("dummy").withId(42).build();
 Aggregate aggregate = AggregateBuilder.aggregate().withName("aggregate").contains(dummy);
 
 // when
-Strign json = gson.toJson(aggregate, transformer);
+Strign json = gson.toJson(aggregate, filters);
 
 // then
 assertThat(json).isEqualTo("{name: \"aggregate\" content: [{ name: \"dummy\", id: 42}] }");

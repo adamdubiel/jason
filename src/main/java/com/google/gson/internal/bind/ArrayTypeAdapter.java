@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -61,7 +61,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
     this.componentType = componentType;
   }
 
-  public Object read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+  public Object read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
     if (in.peek() == JsonToken.NULL) {
       in.nextNull();
       return null;
@@ -70,7 +70,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
     List<E> list = new ArrayList<E>();
     in.beginArray();
     while (in.hasNext()) {
-      E instance = componentTypeAdapter.read(in, runtimeTransformer);
+      E instance = componentTypeAdapter.read(in, runtimeFilters);
       list.add(instance);
     }
     in.endArray();
@@ -82,7 +82,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
   }
 
   @SuppressWarnings("unchecked")
-  @Override public void write(JsonWriter out, Object array, RuntimeTransformer runtimeTransformer) throws IOException {
+  @Override public void write(JsonWriter out, Object array, RuntimeFilters runtimeFilters) throws IOException {
     if (array == null) {
       out.nullValue();
       return;
@@ -91,7 +91,7 @@ public final class ArrayTypeAdapter<E> extends TypeAdapter<Object> {
     out.beginArray();
     for (int i = 0, length = Array.getLength(array); i < length; i++) {
       E value = (E) Array.get(array, i);
-      componentTypeAdapter.write(out, value, runtimeTransformer);
+      componentTypeAdapter.write(out, value, runtimeFilters);
     }
     out.endArray();
   }

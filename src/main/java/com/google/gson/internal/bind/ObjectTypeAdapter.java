@@ -17,7 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;
@@ -52,14 +52,14 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
     this.gson = gson;
   }
 
-  @Override public Object read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+  @Override public Object read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
     JsonToken token = in.peek();
     switch (token) {
     case BEGIN_ARRAY:
       List<Object> list = new ArrayList<Object>();
       in.beginArray();
       while (in.hasNext()) {
-        list.add(read(in, runtimeTransformer));
+        list.add(read(in, runtimeFilters));
       }
       in.endArray();
       return list;
@@ -68,7 +68,7 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
       Map<String, Object> map = new LinkedTreeMap<String, Object>();
       in.beginObject();
       while (in.hasNext()) {
-        map.put(in.nextName(), read(in, runtimeTransformer));
+        map.put(in.nextName(), read(in, runtimeFilters));
       }
       in.endObject();
       return map;
@@ -92,7 +92,7 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
   }
 
   @SuppressWarnings("unchecked")
-  @Override public void write(JsonWriter out, Object value, RuntimeTransformer runtimeTransformer) throws IOException {
+  @Override public void write(JsonWriter out, Object value, RuntimeFilters runtimeFilters) throws IOException {
     if (value == null) {
       out.nullValue();
       return;
@@ -105,6 +105,6 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
       return;
     }
 
-    typeAdapter.write(out, value, runtimeTransformer);
+    typeAdapter.write(out, value, runtimeFilters);
   }
 }

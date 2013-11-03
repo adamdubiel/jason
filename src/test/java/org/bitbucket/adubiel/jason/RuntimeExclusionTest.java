@@ -17,10 +17,9 @@ package org.bitbucket.adubiel.jason;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bitbucket.adubiel.jason.transform.DefaultRuntimeTransformer;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.jayway.jsonassert.JsonAssert;
-import org.bitbucket.adubiel.jason.filter.AttributeFilter;
+import org.bitbucket.adubiel.jason.filter.RuntimeFiltersBuilder;
 import org.bitbucket.adubiel.jason.test.model.Parent;
 import org.junit.Test;
 
@@ -38,11 +37,10 @@ public class RuntimeExclusionTest {
         Gson gson = new GsonBuilder().create();
         Parent parent = new Parent(1, "should be skipped");
 
-        AttributeFilter filter = new AttributeFilter().including(Parent.class, "id");
-        RuntimeTransformer transformer = new DefaultRuntimeTransformer(filter);
+        RuntimeFilters filters = RuntimeFiltersBuilder.runtimeFilters().including(Parent.class, "id").build();
 
         // when
-        String json = gson.toJson(parent, transformer);
+        String json = gson.toJson(parent, filters);
 
         // then
         JsonAssert.with(json).assertEquals("$.id", 1).assertNotDefined("$.name");
@@ -54,11 +52,10 @@ public class RuntimeExclusionTest {
         Gson gson = new GsonBuilder().create();
         String parentJson = "{ id: 1, name: \"should be skipped\" }";
 
-        AttributeFilter filter = new AttributeFilter().including(Parent.class, "id");
-        RuntimeTransformer transformer = new DefaultRuntimeTransformer(filter);
+        RuntimeFilters filters = RuntimeFiltersBuilder.runtimeFilters().including(Parent.class, "id").build();
 
         // when
-        Parent parent = gson.fromJson(parentJson, Parent.class, transformer);
+        Parent parent = gson.fromJson(parentJson, Parent.class, filters);
 
         // then
         assertThat(parent.getId()).isEqualTo(1);

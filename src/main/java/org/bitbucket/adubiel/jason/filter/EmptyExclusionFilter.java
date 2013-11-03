@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bitbucket.adubiel.jason.transform;
+package org.bitbucket.adubiel.jason.filter;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 /**
  *
  * @author Adam Dubiel
  */
-public class EmptyRuntimeTransformer implements RuntimeTransformer {
+public class EmptyExclusionFilter implements ExclusionFilter {
 
-    public boolean skipField(TypeToken<?> parentType, String string) {
+    public boolean skipField(Type declaringType, String fieldName, Object fieldValue) {
         return false;
     }
 
-    public String transformName(TypeToken<?> parentType, String fieldName) {
-        return fieldName;
+    public boolean skipField(Type declaringType, String fieldName) {
+        return false;
     }
+
 }

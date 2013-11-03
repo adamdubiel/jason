@@ -25,7 +25,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 
 /**
  *
@@ -46,7 +46,7 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
     }
 
     @Override
-    public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+    public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
         if (in.peek() == JsonToken.NULL) {
             in.nextNull();
             return null;
@@ -57,12 +57,12 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
         try {
             in.beginObject();
             while (in.hasNext()) {
-                String name = runtimeTransformer.transformName(type, in.nextName());
+                String name = runtimeFilters.renameField(type, in.nextName());
                 BoundField field = boundFields.get(name);
-                if (field == null || !field.deserialized || runtimeTransformer.skipField(type, name)) {
+                if (field == null || !field.deserialized || runtimeFilters.skipField(type, name)) {
                     in.skipValue();
                 } else {
-                    field.read(in, instance, runtimeTransformer);
+                    field.read(in, instance, runtimeFilters);
                 }
             }
         } catch (IllegalStateException e) {
@@ -80,7 +80,7 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
     }
 
     @Override
-    public void write(JsonWriter out, T value, RuntimeTransformer transformer) throws IOException {
+    public void write(JsonWriter out, T value, RuntimeFilters transformer) throws IOException {
         if (value == null) {
             out.nullValue();
             return;
@@ -89,8 +89,8 @@ class DefaultAdapter<T> extends TypeAdapter<T> {
         out.beginObject();
         try {
             for (BoundField boundField : boundFields.values()) {
-                if (boundField.serialized && !transformer.skipField(type, boundField.name)) {
-                    out.name(transformer.transformName(type, boundField.name));
+                if (boundField.serialized && !transformer.skipField(type, boundField.name, value)) {
+                    out.name(transformer.renameField(type, boundField.name));
                     boundField.write(out, value, transformer);
                 }
             }

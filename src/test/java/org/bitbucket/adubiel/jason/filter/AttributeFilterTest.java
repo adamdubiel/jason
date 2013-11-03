@@ -14,75 +14,75 @@ public class AttributeFilterTest {
     @Test
     public void shouldAllowFieldWhenIncludedInClassFilter() {
         // given
-        AttributeFilter filter = new AttributeFilter().including(Parent.class, "name");
+        AttributeExclusionFilter filter = new AttributeExclusionFilter().including(Parent.class, "name");
 
         // when
-        boolean allow = filter.allow(Parent.class, "name");
+        boolean skip = filter.skipField(Parent.class, "name");
 
         // then
-        assertThat(allow).isTrue();
+        assertThat(skip).isFalse();
     }
 
     @Test
     public void shouldAllowAllFieldsByDefault() {
         // given
-        AttributeFilter filter = new AttributeFilter();
+        AttributeExclusionFilter filter = new AttributeExclusionFilter();
 
         // when
-        boolean allow = filter.allow(Parent.class, "name");
+        boolean skip = filter.skipField(Parent.class, "name");
 
         // then
-        assertThat(allow).isTrue();
+        assertThat(skip).isFalse();
     }
 
     @Test
     public void shouldNotAllowFieldWhenExcludedInClassFilter() {
         // given
-        AttributeFilter filter = new AttributeFilter().excluding(Parent.class, "name");
+        AttributeExclusionFilter filter = new AttributeExclusionFilter().excluding(Parent.class, "name");
 
         // when
-        boolean allow = filter.allow(Parent.class, "name");
+        boolean skip = filter.skipField(Parent.class, "name");
 
         // then
-        assertThat(allow).isFalse();
+        assertThat(skip).isTrue();
     }
 
     @Test
     public void shouldAllowOnlyFieldsFromIncludeIfDefined() {
         // given
-        AttributeFilter filter = new AttributeFilter().including("name");
+        AttributeExclusionFilter filter = new AttributeExclusionFilter().including("name");
 
         // when
-        boolean allow = filter.allow(Parent.class, "id");
+        boolean skip = filter.skipField(Parent.class, "id");
 
         // then
-        assertThat(allow).isFalse();
+        assertThat(skip).isTrue();
     }
 
     @Test
     public void shouldAllowFieldIfExplicitlyIncludedInClassEvenIfExcludedGlobally() {
         // given
-        AttributeFilter filter = new AttributeFilter().excluding("name")
+        AttributeExclusionFilter filter = new AttributeExclusionFilter().excluding("name")
                 .including(Parent.class, "name");
 
         // when
-        boolean allow = filter.allow(Parent.class, "name");
+        boolean skip = filter.skipField(Parent.class, "name", null);
 
         // then
-        assertThat(allow).isTrue();
+        assertThat(skip).isFalse();
     }
 
     @Test
     public void shouldAllowOnlyFieldFromClassWhichHasItIncluded() {
         // given
-        AttributeFilter filter = new AttributeFilter()
+        AttributeExclusionFilter filter = new AttributeExclusionFilter()
                 .including(Parent.class, "id")
                 .including(SingleChild.class, "name");
 
         // when
-        boolean allow = filter.allow(Parent.class, "name");
+        boolean skip = filter.skipField(Parent.class, "name");
 
         // then
-        assertThat(allow).isFalse();
+        assertThat(skip).isTrue();
     }
 }

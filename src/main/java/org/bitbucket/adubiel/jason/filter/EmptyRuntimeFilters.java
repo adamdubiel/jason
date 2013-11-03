@@ -13,30 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.gson;
+package org.bitbucket.adubiel.jason.filter;
 
-import com.google.gson.stream.JsonReader;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
-import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
+import com.google.gson.reflect.TypeToken;
 
 /**
  *
  * @author Adam Dubiel
  */
-public abstract class SimpleTypeAdapter<T> extends TypeAdapter<T> {
+public class EmptyRuntimeFilters implements RuntimeFilters {
 
-    public abstract void write(JsonWriter out, T value) throws IOException;
-
-    @Override
-    public void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException {
-        write(out, value);
+    public boolean skipField(TypeToken<?> declaringType, String fieldName, Object value) {
+        return false;
     }
 
-    public abstract T read(JsonReader in) throws IOException;
-
-    @Override
-    public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
-        return read(in);
+    public boolean skipField(TypeToken<?> declaringType, String fieldName) {
+        return false;
     }
+
+    public String renameField(TypeToken<?> declaringType, String fieldName) {
+        return fieldName;
+    }
+
 }

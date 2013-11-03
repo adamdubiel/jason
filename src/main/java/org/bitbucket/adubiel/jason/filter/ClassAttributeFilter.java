@@ -7,7 +7,7 @@ import java.util.HashSet;
  *
  * @author Adam Dubiel
  */
-class AttributeFilterOptions {
+class ClassAttributeFilter {
 
     private final HashSet<String> include = new HashSet<String>();
 
@@ -15,11 +15,11 @@ class AttributeFilterOptions {
 
     private boolean checkIncludes = false;
 
-    static AttributeFilterOptions empty() {
-        return new AttributeFilterOptions();
+    static ClassAttributeFilter empty() {
+        return new ClassAttributeFilter();
     }
 
-    AttributeFilterOptions() {
+    ClassAttributeFilter() {
     }
 
     void including(String... includes) {

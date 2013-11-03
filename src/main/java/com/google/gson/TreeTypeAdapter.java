@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
@@ -48,9 +48,9 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     this.skipPast = skipPast;
   }
 
-  @Override public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+  @Override public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
     if (deserializer == null) {
-      return delegate().read(in, runtimeTransformer);
+      return delegate().read(in, runtimeFilters);
     }
     JsonElement value = Streams.parse(in);
     if (value.isJsonNull()) {
@@ -59,9 +59,9 @@ final class TreeTypeAdapter<T> extends TypeAdapter<T> {
     return deserializer.deserialize(value, typeToken.getType(), gson.deserializationContext);
   }
 
-  @Override public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
+  @Override public void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException {
     if (serializer == null) {
-      delegate().write(out, value, runtimeTransformer);
+      delegate().write(out, value, runtimeFilters);
       return;
     }
     if (value == null) {

@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.common.TestTypes.BagOfPrimitives;
@@ -77,15 +77,15 @@ public class DelegateTypeAdapterTest extends TestCase {
       final TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
       return new TypeAdapter<T>() {
         @Override
-        public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
+        public void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException {
           ++numWrites;
-          delegate.write(out, value, runtimeTransformer);
+          delegate.write(out, value, runtimeFilters);
         }
 
         @Override
-        public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+        public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
           ++numReads;
-          return delegate.read(in, runtimeTransformer);
+          return delegate.read(in, runtimeFilters);
         }
       };
     }

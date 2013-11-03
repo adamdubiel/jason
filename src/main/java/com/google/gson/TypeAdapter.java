@@ -15,7 +15,7 @@
  */
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.stream.JsonReader;
@@ -128,7 +128,7 @@ public abstract class TypeAdapter<T> {
      *
      * @param value the Java object to write. May be null.
      */
-    public abstract void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException;
+    public abstract void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException;
 
     /**
      * Converts {@code value} to a JSON document and writes it to {@code out}.
@@ -141,9 +141,9 @@ public abstract class TypeAdapter<T> {
      * @param value the Java object to convert. May be null.
      * @since 2.2
      */
-    public final void toJson(Writer out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
+    public final void toJson(Writer out, T value, RuntimeFilters runtimeFilters) throws IOException {
         JsonWriter writer = new JsonWriter(out);
-        write(writer, value, runtimeTransformer);
+        write(writer, value, runtimeFilters);
     }
 
     /**
@@ -189,21 +189,21 @@ public abstract class TypeAdapter<T> {
     public final TypeAdapter<T> nullSafe() {
         return new TypeAdapter<T>() {
             @Override
-            public void write(JsonWriter out, T value, RuntimeTransformer runtimeTransformer) throws IOException {
+            public void write(JsonWriter out, T value, RuntimeFilters runtimeFilters) throws IOException {
                 if (value == null) {
                     out.nullValue();
                 } else {
-                    TypeAdapter.this.write(out, value, runtimeTransformer);
+                    TypeAdapter.this.write(out, value, runtimeFilters);
                 }
             }
 
             @Override
-            public T read(JsonReader reader, RuntimeTransformer runtimeTransformer) throws IOException {
+            public T read(JsonReader reader, RuntimeFilters runtimeFilters) throws IOException {
                 if (reader.peek() == JsonToken.NULL) {
                     reader.nextNull();
                     return null;
                 }
-                return TypeAdapter.this.read(reader, runtimeTransformer);
+                return TypeAdapter.this.read(reader, runtimeFilters);
             }
         };
     }
@@ -218,9 +218,9 @@ public abstract class TypeAdapter<T> {
      * @param value the Java object to convert. May be null.
      * @since 2.2
      */
-    public final String toJson(T value, RuntimeTransformer runtimeTransformer) throws IOException {
+    public final String toJson(T value, RuntimeFilters runtimeFilters) throws IOException {
         StringWriter stringWriter = new StringWriter();
-        toJson(stringWriter, value, runtimeTransformer);
+        toJson(stringWriter, value, runtimeFilters);
         return stringWriter.toString();
     }
 
@@ -231,10 +231,10 @@ public abstract class TypeAdapter<T> {
      * @return the converted JSON tree. May be {@link JsonNull}.
      * @since 2.2
      */
-    public final JsonElement toJsonTree(T value, RuntimeTransformer runtimeTransformer) {
+    public final JsonElement toJsonTree(T value, RuntimeFilters runtimeFilters) {
         try {
             JsonTreeWriter jsonWriter = new JsonTreeWriter();
-            write(jsonWriter, value, runtimeTransformer);
+            write(jsonWriter, value, runtimeFilters);
             return jsonWriter.get();
         } catch (IOException e) {
             throw new JsonIOException(e);
@@ -247,7 +247,7 @@ public abstract class TypeAdapter<T> {
      *
      * @return the converted Java object. May be null.
      */
-    public abstract T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException;
+    public abstract T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException;
 
     /**
      * Converts the JSON document in {@code in} to a Java object. Unlike Gson's
@@ -258,9 +258,9 @@ public abstract class TypeAdapter<T> {
      * @return the converted Java object. May be null.
      * @since 2.2
      */
-    public final T fromJson(Reader in, RuntimeTransformer runtimeTransformer) throws IOException {
+    public final T fromJson(Reader in, RuntimeFilters runtimeFilters) throws IOException {
         JsonReader reader = new JsonReader(in);
-        return read(reader, runtimeTransformer);
+        return read(reader, runtimeFilters);
     }
 
     /**
@@ -272,8 +272,8 @@ public abstract class TypeAdapter<T> {
      * @return the converted Java object. May be null.
      * @since 2.2
      */
-    public final T fromJson(String json, RuntimeTransformer runtimeTransformer) throws IOException {
-        return fromJson(new StringReader(json), runtimeTransformer);
+    public final T fromJson(String json, RuntimeFilters runtimeFilters) throws IOException {
+        return fromJson(new StringReader(json), runtimeFilters);
     }
 
     /**
@@ -282,10 +282,10 @@ public abstract class TypeAdapter<T> {
      * @param jsonTree the Java object to convert. May be {@link JsonNull}.
      * @since 2.2
      */
-    public final T fromJsonTree(JsonElement jsonTree, RuntimeTransformer runtimeTransformer) {
+    public final T fromJsonTree(JsonElement jsonTree, RuntimeFilters runtimeFilters) {
         try {
             JsonReader jsonReader = new JsonTreeReader(jsonTree);
-            return read(jsonReader, runtimeTransformer);
+            return read(jsonReader, runtimeFilters);
         } catch (IOException e) {
             throw new JsonIOException(e);
         }

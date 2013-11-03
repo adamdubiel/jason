@@ -17,7 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -71,7 +71,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
       this.constructor = constructor;
     }
 
-    public Collection<E> read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
+    public Collection<E> read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
       if (in.peek() == JsonToken.NULL) {
         in.nextNull();
         return null;
@@ -80,14 +80,14 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
       Collection<E> collection = constructor.construct();
       in.beginArray();
       while (in.hasNext()) {
-        E instance = elementTypeAdapter.read(in, runtimeTransformer);
+        E instance = elementTypeAdapter.read(in, runtimeFilters);
         collection.add(instance);
       }
       in.endArray();
       return collection;
     }
 
-    public void write(JsonWriter out, Collection<E> collection, RuntimeTransformer runtimeTransformer) throws IOException {
+    public void write(JsonWriter out, Collection<E> collection, RuntimeFilters runtimeFilters) throws IOException {
       if (collection == null) {
         out.nullValue();
         return;
@@ -95,7 +95,7 @@ public final class CollectionTypeAdapterFactory implements TypeAdapterFactory {
 
       out.beginArray();
       for (E element : collection) {
-        elementTypeAdapter.write(out, element, runtimeTransformer);
+        elementTypeAdapter.write(out, element, runtimeFilters);
       }
       out.endArray();
     }

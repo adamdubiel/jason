@@ -16,7 +16,7 @@
 package org.bitbucket.adubiel.jason.bind;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -40,13 +40,13 @@ public final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
     }
 
     @Override
-    public T read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
-        return delegate.read(in, runtimeTransformer);
+    public T read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
+        return delegate.read(in, runtimeFilters);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void write(JsonWriter out, T value, RuntimeTransformer exclusion) throws IOException {
+    public void write(JsonWriter out, T value, RuntimeFilters exclusion) throws IOException {
         // Order of preference for choosing type adapters
         // First preference: a type adapter registered for the runtime type
         // Second preference: a type adapter registered for the declared type

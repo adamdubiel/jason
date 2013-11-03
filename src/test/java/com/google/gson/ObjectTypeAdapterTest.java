@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.transform.EmptyRuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.EmptyRuntimeFilters;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -28,7 +28,7 @@ public final class ObjectTypeAdapterTest extends TestCase {
   private final TypeAdapter<Object> adapter = gson.getAdapter(Object.class);
 
   public void testDeserialize() throws Exception {
-    Map<?, ?> map = (Map<?, ?>) adapter.fromJson("{\"a\":5,\"b\":[1,2,null],\"c\":{\"x\":\"y\"}}", new EmptyRuntimeTransformer());
+    Map<?, ?> map = (Map<?, ?>) adapter.fromJson("{\"a\":5,\"b\":[1,2,null],\"c\":{\"x\":\"y\"}}", new EmptyRuntimeFilters());
     assertEquals(5.0, map.get("a"));
     assertEquals(Arrays.asList(1.0, 2.0, null), map.get("b"));
     assertEquals(Collections.singletonMap("x", "y"), map.get("c"));
@@ -37,23 +37,23 @@ public final class ObjectTypeAdapterTest extends TestCase {
 
   public void testSerialize() throws Exception {
     Object object = new RuntimeType();
-    assertEquals("{'a':5,'b':[1,2,null]}", adapter.toJson(object, new EmptyRuntimeTransformer()).replace("\"", "'"));
+    assertEquals("{'a':5,'b':[1,2,null]}", adapter.toJson(object, new EmptyRuntimeFilters()).replace("\"", "'"));
   }
 
   public void testSerializeNullValue() throws Exception {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("a", null);
-    assertEquals("{'a':null}", adapter.toJson(map, new EmptyRuntimeTransformer()).replace('"', '\''));
+    assertEquals("{'a':null}", adapter.toJson(map, new EmptyRuntimeFilters()).replace('"', '\''));
   }
 
   public void testDeserializeNullValue() throws Exception {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("a", null);
-    assertEquals(map, adapter.fromJson("{\"a\":null}", new EmptyRuntimeTransformer()));
+    assertEquals(map, adapter.fromJson("{\"a\":null}", new EmptyRuntimeFilters()));
   }
 
   public void testSerializeObject() throws Exception {
-    assertEquals("{}", adapter.toJson(new Object(), new EmptyRuntimeTransformer()));
+    assertEquals("{}", adapter.toJson(new Object(), new EmptyRuntimeFilters()));
   }
 
   @SuppressWarnings("unused")

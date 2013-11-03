@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.bitbucket.adubiel.jason.transform;
+package org.bitbucket.adubiel.jason.filter;
 
-import com.google.gson.reflect.TypeToken;
+import java.util.HashMap;
 
 /**
  *
  * @author Adam Dubiel
  */
-public interface RuntimeTransformer {
+public class ClassFieldNameMapper {
 
-    boolean skipField(TypeToken<?> parentType, String fieldName);
+    private final HashMap<String, String> nameMapping = new HashMap<String, String>();
 
-    String transformName(TypeToken<?> parentType, String fieldName);
+    ClassFieldNameMapper() {
+    }
+
+    void addMapping(String from, String to) {
+        nameMapping.put(from, to);
+    }
+
+    String renameField(String fieldName) {
+        String renamedField = nameMapping.get(fieldName);
+        if (renamedField != null) {
+            return renamedField;
+        }
+        return fieldName;
+    }
 }

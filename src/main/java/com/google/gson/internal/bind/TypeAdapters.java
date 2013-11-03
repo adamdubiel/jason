@@ -43,7 +43,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -524,12 +524,12 @@ public final class TypeAdapters {
 
       final TypeAdapter<Date> dateTypeAdapter = gson.getAdapter(Date.class);
       return (TypeAdapter<T>) new TypeAdapter<Timestamp>() {
-        @Override public Timestamp read(JsonReader in, RuntimeTransformer runtimeTransformer) throws IOException {
-          Date date = dateTypeAdapter.read(in, runtimeTransformer);
+        @Override public Timestamp read(JsonReader in, RuntimeFilters runtimeFilters) throws IOException {
+          Date date = dateTypeAdapter.read(in, runtimeFilters);
           return date != null ? new Timestamp(date.getTime()) : null;
         }
 
-        @Override public void write(JsonWriter out, Timestamp value, RuntimeTransformer runtimeExclusion) throws IOException {
+        @Override public void write(JsonWriter out, Timestamp value, RuntimeFilters runtimeExclusion) throws IOException {
           dateTypeAdapter.write(out, value, runtimeExclusion);
         }
       };

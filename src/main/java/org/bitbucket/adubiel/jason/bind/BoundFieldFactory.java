@@ -24,7 +24,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.bitbucket.adubiel.jason.attribute.Attribute;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 
 /**
  *
@@ -45,17 +45,17 @@ final class BoundFieldFactory {
 
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            void write(JsonWriter writer, Object value, RuntimeTransformer runtimeTransformer)
+            void write(JsonWriter writer, Object value, RuntimeFilters runtimeFilters)
                     throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 Object fieldValue = attribute.get(value);
                 TypeAdapter adapterWrapper = new TypeAdapterRuntimeTypeWrapper(context, this.typeAdapter, fieldType.getType());
-                adapterWrapper.write(writer, fieldValue, runtimeTransformer);
+                adapterWrapper.write(writer, fieldValue, runtimeFilters);
             }
 
             @Override
-            void read(JsonReader reader, Object value, RuntimeTransformer runtimeTransformer)
+            void read(JsonReader reader, Object value, RuntimeFilters runtimeFilters)
                     throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                Object fieldValue = typeAdapter.read(reader, runtimeTransformer);
+                Object fieldValue = typeAdapter.read(reader, runtimeFilters);
                 if (fieldValue != null || !isPrimitive) {
                     attribute.set(value, fieldValue);
                 }

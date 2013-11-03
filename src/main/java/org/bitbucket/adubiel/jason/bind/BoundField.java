@@ -19,7 +19,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import org.bitbucket.adubiel.jason.transform.RuntimeTransformer;
+import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
 
 /**
  *
@@ -39,8 +39,8 @@ abstract class BoundField {
         this.deserialized = deserialized;
     }
 
-    abstract void write(JsonWriter writer, Object value, RuntimeTransformer runtimeTransformer) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+    abstract void write(JsonWriter writer, Object value, RuntimeFilters runtimeFilters) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
-    abstract void read(JsonReader reader, Object value, RuntimeTransformer runtimeTransformer) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
+    abstract void read(JsonReader reader, Object value, RuntimeFilters runtimeFilters) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
 }
