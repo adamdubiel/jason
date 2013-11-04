@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.attribute.Attribute;
+import org.jasonjson.core.attribute.Attribute;
 
 /**
  * This is a configurable {@link ExclusionStrategy} that can be used for

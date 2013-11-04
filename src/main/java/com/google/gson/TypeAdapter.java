@@ -15,7 +15,7 @@
  */
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.stream.JsonReader;

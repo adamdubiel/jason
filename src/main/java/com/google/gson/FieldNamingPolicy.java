@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.attribute.Attribute;
+import org.jasonjson.core.attribute.Attribute;
 
 /**
  * An enumeration that defines a few standard naming conventions for JSON field names.

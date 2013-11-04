@@ -17,7 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;

@@ -26,7 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import junit.framework.TestCase;
-import org.bitbucket.adubiel.jason.attribute.Attribute;
+import org.jasonjson.core.attribute.Attribute;
 
 /**
  * Performs some functional tests when Gson is instantiated with some common user defined

@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -37,7 +37,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
+import org.jasonjson.core.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Adapts maps to either JSON objects or JSON arrays.

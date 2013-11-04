@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.filter.EmptyRuntimeFilters;
+import org.jasonjson.core.filter.EmptyRuntimeFilters;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;

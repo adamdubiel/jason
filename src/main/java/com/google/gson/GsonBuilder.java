@@ -30,8 +30,8 @@ import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.reflect.TypeToken;
-import org.bitbucket.adubiel.jason.AccessStrategy;
-import org.bitbucket.adubiel.jason.AnnotationDefinedAccessStrategy;
+import org.jasonjson.core.AccessStrategy;
+import org.jasonjson.core.AnnotationDefinedAccessStrategy;
 
 /**
  * <p>Use this builder to construct a {@link Gson} instance when you need to set configuration

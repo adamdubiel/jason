@@ -17,7 +17,7 @@
 package com.google.gson.internal.bind;
 
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.$Gson$Types;
@@ -30,7 +30,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import org.bitbucket.adubiel.jason.bind.TypeAdapterRuntimeTypeWrapper;
+import org.jasonjson.core.bind.TypeAdapterRuntimeTypeWrapper;
 
 /**
  * Adapt a homogeneous collection of objects.

@@ -19,7 +19,7 @@ package com.google.gson;
 import com.google.gson.annotations.Since;
 import com.google.gson.internal.Excluder;
 import junit.framework.TestCase;
-import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
+import org.jasonjson.core.attribute.FieldAttribute;
 
 /**
  * Unit tests for the {@link Excluder} class.

@@ -43,7 +43,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.SimpleTypeAdapter;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;

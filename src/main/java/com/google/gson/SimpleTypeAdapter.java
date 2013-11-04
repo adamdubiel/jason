@@ -16,7 +16,7 @@
 package com.google.gson;
 
 import com.google.gson.stream.JsonReader;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 

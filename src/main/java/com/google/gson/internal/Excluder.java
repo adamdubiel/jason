@@ -18,7 +18,7 @@ package com.google.gson.internal;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.annotations.Expose;
@@ -32,7 +32,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.bitbucket.adubiel.jason.attribute.Attribute;
+import org.jasonjson.core.attribute.Attribute;
 
 /**
  * This class selects which fields and types to omit. It is configurable,

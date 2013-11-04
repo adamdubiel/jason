@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.common.TestTypes.BagOfPrimitives;

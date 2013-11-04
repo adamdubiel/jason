@@ -22,7 +22,7 @@ import com.google.gson.internal.Excluder;
 import junit.framework.TestCase;
 
 import java.lang.reflect.Field;
-import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
+import org.jasonjson.core.attribute.FieldAttribute;
 
 /**
  * Unit tests for GsonBuilder.REQUIRE_EXPOSE_DESERIALIZE.

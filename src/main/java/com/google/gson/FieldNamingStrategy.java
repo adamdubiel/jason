@@ -16,7 +16,7 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.attribute.Attribute;
+import org.jasonjson.core.attribute.Attribute;
 
 /**
  * A mechanism for providing custom field naming in Gson.  This allows the client code to translate

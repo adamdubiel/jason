@@ -16,8 +16,8 @@
 
 package com.google.gson;
 
-import org.bitbucket.adubiel.jason.filter.RuntimeFilters;
-import org.bitbucket.adubiel.jason.filter.EmptyRuntimeFilters;
+import org.jasonjson.core.filter.RuntimeFilters;
+import org.jasonjson.core.filter.EmptyRuntimeFilters;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.Primitives;
@@ -51,9 +51,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.bitbucket.adubiel.jason.AccessStrategy;
-import org.bitbucket.adubiel.jason.AnnotationDefinedAccessStrategy;
-import org.bitbucket.adubiel.jason.bind.ReflectiveTypeAdapterFactory;
+import org.jasonjson.core.AccessStrategy;
+import org.jasonjson.core.AnnotationDefinedAccessStrategy;
+import org.jasonjson.core.bind.ReflectiveTypeAdapterFactory;
 
 /**
  * This is the main class for using Gson. Gson is typically used by first constructing a

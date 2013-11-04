@@ -19,7 +19,7 @@ package com.google.gson;
 import com.google.gson.internal.Excluder;
 import java.lang.reflect.Field;
 import junit.framework.TestCase;
-import org.bitbucket.adubiel.jason.attribute.FieldAttribute;
+import org.jasonjson.core.attribute.FieldAttribute;
 
 /**
  * Unit test for GsonBuilder.EXCLUDE_INNER_CLASSES.
