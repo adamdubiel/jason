@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
 
     <name>jason</name>
-    <description>Jason - elastic JSON serializer.</description>
+    <description>Jason - elastic JSON serializer based on GSON.</description>
 
     <inceptionYear>2013</inceptionYear>
 
@@ -184,11 +184,11 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype-nexus-staging</id>
+            <id>sonatype-nexus-staging-jason</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
+            <id>sonatype-nexus-snapshots-jason</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
