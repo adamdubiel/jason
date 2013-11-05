@@ -15,16 +15,16 @@
  */
 package org.jasonjson.core.bind;
 
-import com.google.gson.FieldNamingStrategy;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.annotations.SerializedName;
-import com.google.gson.internal.$Gson$Types;
-import com.google.gson.internal.ConstructorConstructor;
-import com.google.gson.internal.Excluder;
-import com.google.gson.internal.ObjectConstructor;
-import com.google.gson.reflect.TypeToken;
+import org.jasonjson.core.FieldNamingStrategy;
+import org.jasonjson.core.Jason;
+import org.jasonjson.core.TypeAdapter;
+import org.jasonjson.core.TypeAdapterFactory;
+import org.jasonjson.core.annotations.SerializedName;
+import org.jasonjson.core.internal.$Gson$Types;
+import org.jasonjson.core.internal.ConstructorConstructor;
+import org.jasonjson.core.internal.Excluder;
+import org.jasonjson.core.internal.ObjectConstructor;
+import org.jasonjson.core.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.*;
 import org.jasonjson.core.AccessStrategy;
@@ -53,7 +53,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     }
 
     @Override
-    public <T> TypeAdapter<T> create(Gson gson, final TypeToken<T> type) {
+    public <T> TypeAdapter<T> create(Jason gson, final TypeToken<T> type) {
         Class<? super T> raw = type.getRawType();
 
         if (!Object.class.isAssignableFrom(raw)) {
@@ -75,7 +75,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
         return serializedName == null ? fieldNamingPolicy.translateName(attribute) : serializedName.value();
     }
 
-    private Map<String, BoundField> getBoundFields(Gson context, TypeToken<?> type, Class<?> raw, AccessStrategy accessStrategy) {
+    private Map<String, BoundField> getBoundFields(Jason context, TypeToken<?> type, Class<?> raw, AccessStrategy accessStrategy) {
         Map<String, BoundField> result = new LinkedHashMap<String, BoundField>();
         if (raw.isInterface()) {
             return result;

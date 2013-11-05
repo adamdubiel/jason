@@ -15,13 +15,13 @@
  */
 package org.jasonjson.core.bind;
 
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.TypeAdapter;
-import com.google.gson.internal.ObjectConstructor;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
+import org.jasonjson.core.JsonSyntaxException;
+import org.jasonjson.core.TypeAdapter;
+import org.jasonjson.core.internal.ObjectConstructor;
+import org.jasonjson.core.reflect.TypeToken;
+import org.jasonjson.core.stream.JsonReader;
+import org.jasonjson.core.stream.JsonToken;
+import org.jasonjson.core.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

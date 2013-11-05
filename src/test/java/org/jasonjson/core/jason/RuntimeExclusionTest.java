@@ -15,8 +15,8 @@
  */
 package org.jasonjson.core.jason;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.jasonjson.core.Jason;
+import org.jasonjson.core.JasonBuilder;
 import org.jasonjson.core.filter.RuntimeFilters;
 import com.jayway.jsonassert.JsonAssert;
 import org.jasonjson.core.filter.RuntimeFiltersBuilder;
@@ -34,7 +34,7 @@ public class RuntimeExclusionTest {
     @Test
     public void shouldSkipNameFieldSpecifiedInRuntimeFiltersOnSerialization() {
         // given
-        Gson gson = new GsonBuilder().create();
+        Jason gson = new JasonBuilder().create();
         Parent parent = new Parent(1, "should be skipped");
 
         RuntimeFilters filters = RuntimeFiltersBuilder.runtimeFilters().including(Parent.class, "id").build();
@@ -49,7 +49,7 @@ public class RuntimeExclusionTest {
     @Test
     public void shouldSkipNameFieldSpecifiedInRuntimeFiltersOnDeserialization() {
         // given
-        Gson gson = new GsonBuilder().create();
+        Jason gson = new JasonBuilder().create();
         String parentJson = "{ id: 1, name: \"should be skipped\" }";
 
         RuntimeFilters filters = RuntimeFiltersBuilder.runtimeFilters().including(Parent.class, "id").build();

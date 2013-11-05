@@ -15,12 +15,12 @@
  */
 package org.jasonjson.core.bind;
 
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
-import com.google.gson.internal.Primitives;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import org.jasonjson.core.Jason;
+import org.jasonjson.core.TypeAdapter;
+import org.jasonjson.core.internal.Primitives;
+import org.jasonjson.core.reflect.TypeToken;
+import org.jasonjson.core.stream.JsonReader;
+import org.jasonjson.core.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.jasonjson.core.attribute.Attribute;
@@ -35,7 +35,7 @@ final class BoundFieldFactory {
     private BoundFieldFactory() {
     }
 
-    static BoundField createInstance(final Gson context, final Attribute attribute, final String name,
+    static BoundField createInstance(final Jason context, final Attribute attribute, final String name,
                                      final TypeToken<?> fieldType, boolean serialize, boolean deserialize) {
         // special casing primitives here saves ~5% on Android...
         final boolean isPrimitive = Primitives.isPrimitive(fieldType.getRawType());

@@ -15,7 +15,7 @@
  */
 package org.jasonjson.core.attribute;
 
-import com.google.gson.internal.$Gson$Preconditions;
+import org.jasonjson.core.internal.$Gson$Preconditions;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

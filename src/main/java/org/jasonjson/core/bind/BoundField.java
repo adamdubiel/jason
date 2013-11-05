@@ -15,8 +15,8 @@
  */
 package org.jasonjson.core.bind;
 
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import org.jasonjson.core.stream.JsonReader;
+import org.jasonjson.core.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import org.jasonjson.core.filter.RuntimeFilters;

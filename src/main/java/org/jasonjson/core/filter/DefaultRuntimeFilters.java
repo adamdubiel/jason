@@ -15,7 +15,7 @@
  */
 package org.jasonjson.core.filter;
 
-import com.google.gson.reflect.TypeToken;
+import org.jasonjson.core.reflect.TypeToken;
 
 /**
  *

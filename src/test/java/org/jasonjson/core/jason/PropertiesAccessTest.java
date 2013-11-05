@@ -15,8 +15,8 @@
  */
 package org.jasonjson.core.jason;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.jasonjson.core.Jason;
+import org.jasonjson.core.JasonBuilder;
 import com.jayway.jsonassert.JsonAssert;
 import org.jasonsjon.core.test.model.PropertyAccessedParent;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class PropertiesAccessTest {
     @Test
     public void shouldFetchPropertyUsingGetter() {
         // given
-        Gson gson = new GsonBuilder().create();
+        Jason gson = new JasonBuilder().create();
         PropertyAccessedParent parent = new PropertyAccessedParent("getter name");
 
         // when

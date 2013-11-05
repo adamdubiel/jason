@@ -15,25 +15,25 @@
  */
 package org.jasonjson.core.bind;
 
-import com.google.gson.Gson;
+import org.jasonjson.core.Jason;
 import org.jasonjson.core.filter.RuntimeFilters;
-import com.google.gson.TypeAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import org.jasonjson.core.TypeAdapter;
+import org.jasonjson.core.reflect.TypeToken;
+import org.jasonjson.core.stream.JsonReader;
+import org.jasonjson.core.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
 public final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
 
-    private final Gson context;
+    private final Jason context;
 
     private final TypeAdapter<T> delegate;
 
     private final Type type;
 
-    public TypeAdapterRuntimeTypeWrapper(Gson context, TypeAdapter<T> delegate, Type type) {
+    public TypeAdapterRuntimeTypeWrapper(Jason context, TypeAdapter<T> delegate, Type type) {
         this.context = context;
         this.delegate = delegate;
         this.type = type;
