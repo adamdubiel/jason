@@ -58,6 +58,33 @@ public class PropertiesAccessTest {
         JsonAssert.with(json).assertEquals("$.list[0].parentName", "parentName").assertEquals("$.list[0].firstName", "instanceName").assertNotDefined("$.list[0].name");
     }
 
+    @Test
+    public void shouldSerializeGenericEnumsUsingName() {
+        // given
+        Jason jason = new JasonBuilder().create();
+        EnumHolder holder = new EnumHolder(TestEnum.VALUE);
+
+        // when
+        String json = jason.toJson(holder);
+
+        // then
+        JsonAssert.with(json).assertEquals("$.value", "VALUE");
+    }
+
+    private static enum TestEnum {
+
+        VALUE
+    }
+
+    private static class EnumHolder {
+
+        Enum value;
+
+        EnumHolder(Enum value) {
+            this.value = value;
+        }
+    }
+
     @JasonAccess(strategy = AccessStrategyType.PROPERTY)
     private static class InstanceListWrapper {
 
