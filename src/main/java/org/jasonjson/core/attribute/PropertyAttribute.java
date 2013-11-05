@@ -15,7 +15,6 @@
  */
 package org.jasonjson.core.attribute;
 
-import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,57 +28,57 @@ import java.util.Collection;
  */
 public class PropertyAttribute implements Attribute {
 
-    private final PropertyDescriptor descriptor;
+    private final String name;
 
-    private final Method readMethod;
+    private final Method method;
 
-    public PropertyAttribute(PropertyDescriptor descriptor) {
-        this.descriptor = descriptor;
-        this.readMethod = descriptor.getReadMethod();
+    public PropertyAttribute(Method method, String name) {
+        this.method = method;
+        this.name = name;
     }
 
     public String getName() {
-        return descriptor.getName();
+        return name;
     }
 
     public Class<?> getDeclaringClass() {
-        return readMethod.getDeclaringClass();
+        return method.getDeclaringClass();
     }
 
     public Type getDeclaredType() {
-        return readMethod.getGenericReturnType();
+        return method.getGenericReturnType();
     }
 
     public Class<?> getDeclaredClass() {
-        return readMethod.getReturnType();
+        return method.getReturnType();
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> annotation) {
-        return readMethod.getAnnotation(annotation);
+        return method.getAnnotation(annotation);
     }
 
     public Collection<Annotation> getAnnotations() {
-        return Arrays.asList(readMethod.getDeclaredAnnotations());
+        return Arrays.asList(method.getDeclaredAnnotations());
     }
 
     public boolean hasModifier(int modifier) {
-        return (readMethod.getModifiers() & modifier) != 0;
+        return (method.getModifiers() & modifier) != 0;
     }
 
     public int getModifiers() {
-        return readMethod.getModifiers();
+        return method.getModifiers();
     }
 
     public Object get(Object instance) throws IllegalAccessException, InvocationTargetException, IllegalArgumentException {
-        return readMethod.invoke(instance);
+        return method.invoke(instance);
     }
 
     public void set(Object instance, Object value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        descriptor.getWriteMethod().invoke(instance, value);
+        throw new UnsupportedOperationException("Jason does not support setter deserialization (yet)!");
     }
 
     public boolean isSynthetic() {
-        return readMethod.isSynthetic();
+        return method.isSynthetic();
     }
 
 }

@@ -15,7 +15,7 @@ public class AttributeExclusionFilter implements ExclusionFilter {
 
     private static final ClassAttributeFilter EMPTY_FILTER = ClassAttributeFilter.empty();
 
-    private final ClassAttributeFilter globalFilter = EMPTY_FILTER;
+    private final ClassAttributeFilter globalFilter = ClassAttributeFilter.empty();
 
     private final Map<Class<?>, ClassAttributeFilter> classFilters = new HashMap<Class<?>, ClassAttributeFilter>();
 

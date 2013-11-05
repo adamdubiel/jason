@@ -15,10 +15,8 @@
  */
 package org.jasonjson.core.bind;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,14 +53,23 @@ final class AttributesExtractor {
 
     static Collection<Attribute> extractFromProperties(Class<?> clazz) {
         List<Attribute> attributes = new ArrayList<Attribute>();
-        try {
-            for (PropertyDescriptor property : Introspector.getBeanInfo(clazz, clazz.getSuperclass()).getPropertyDescriptors()) {
-                attributes.add(new PropertyAttribute(property));
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (isGetter(method)) {
+                method.setAccessible(true);
+                attributes.add(new PropertyAttribute(method, extractPropertyName(method)));
             }
-        } catch (IntrospectionException e) {
-            throw new AssertionError(e);
         }
         return attributes;
+    }
+
+    private static boolean isGetter(Method method) {
+        return method.getName().startsWith("get") || method.getName().startsWith("is");
+    }
+
+    private static String extractPropertyName(Method method) {
+        String name = method.getName();
+        name = name.replaceFirst("get|is", "");
+        return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
 }

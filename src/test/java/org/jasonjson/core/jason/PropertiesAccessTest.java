@@ -18,7 +18,11 @@ package org.jasonjson.core.jason;
 import org.jasonjson.core.Jason;
 import org.jasonjson.core.JasonBuilder;
 import com.jayway.jsonassert.JsonAssert;
-import org.jasonsjon.core.test.model.PropertyAccessedParent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.jasonjson.core.AccessStrategyType;
+import org.jasonjson.core.JasonAccess;
 import org.junit.Test;
 
 /**
@@ -30,13 +34,66 @@ public class PropertiesAccessTest {
     @Test
     public void shouldFetchPropertyUsingGetter() {
         // given
-        Jason gson = new JasonBuilder().create();
-        PropertyAccessedParent parent = new PropertyAccessedParent("getter name");
+        Jason jason = new JasonBuilder().create();
+        InstanceClass instance = new InstanceClass("parentName", "instanceName");
 
         // when
-        String json = gson.toJson(parent);
+        String json = jason.toJson(instance);
 
         // then
-        JsonAssert.with(json).assertEquals("$.getterName", "getter name").assertNotDefined("$.name");
+        JsonAssert.with(json).assertEquals("$.parentName", "parentName").assertEquals("$.firstName", "instanceName").assertNotDefined("$.name");
+    }
+
+    @Test
+    public void shouldFetchPropertiesFromRuntimeType() {
+        // given
+        Jason jason = new JasonBuilder().create();
+        List<AbstractParentClass> list = new ArrayList<AbstractParentClass>(Arrays.asList(new InstanceClass("parentName", "instanceName")));
+        InstanceListWrapper wrapper = new InstanceListWrapper(list);
+
+        // when
+        String json = jason.toJson(wrapper);
+
+        // then
+        JsonAssert.with(json).assertEquals("$.list[0].parentName", "parentName").assertEquals("$.list[0].firstName", "instanceName").assertNotDefined("$.list[0].name");
+    }
+
+    @JasonAccess(strategy = AccessStrategyType.PROPERTY)
+    private static class InstanceListWrapper {
+
+        List<AbstractParentClass> list;
+
+        InstanceListWrapper(List<AbstractParentClass> list) {
+            this.list = list;
+        }
+
+        List<AbstractParentClass> getList() {
+            return list;
+        }
+    }
+
+    @JasonAccess(strategy = AccessStrategyType.PROPERTY)
+    private abstract static class AbstractParentClass {
+
+        String name;
+
+        String getParentName() {
+            return name;
+        }
+    }
+
+    @JasonAccess(strategy = AccessStrategyType.PROPERTY)
+    private static class InstanceClass extends AbstractParentClass {
+
+        String firstName;
+
+        InstanceClass(String name, String firstName) {
+            this.name = name;
+            this.firstName = firstName;
+        }
+
+        String getFirstName() {
+            return firstName;
+        }
     }
 }
