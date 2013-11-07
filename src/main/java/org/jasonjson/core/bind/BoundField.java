@@ -33,10 +33,13 @@ abstract class BoundField {
 
     final boolean deserialized;
 
-    protected BoundField(String name, boolean serialized, boolean deserialized) {
+    final boolean field;
+
+    protected BoundField(String name, boolean serialized, boolean deserialized, boolean field) {
         this.name = name;
         this.serialized = serialized;
         this.deserialized = deserialized;
+        this.field = field;
     }
 
     abstract void write(JsonWriter writer, Object value, RuntimeFilters runtimeFilters) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException;

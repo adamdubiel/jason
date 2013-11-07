@@ -36,11 +36,11 @@ final class BoundFieldFactory {
     }
 
     static BoundField createInstance(final Jason context, final Attribute attribute, final String name,
-                                     final TypeToken<?> fieldType, boolean serialize, boolean deserialize) {
+                                     final TypeToken<?> fieldType, boolean serialize, boolean deserialize, boolean fromField) {
         // special casing primitives here saves ~5% on Android...
         final boolean isPrimitive = Primitives.isPrimitive(fieldType.getRawType());
 
-        return new BoundField(name, serialize, deserialize) {
+        return new BoundField(name, serialize, deserialize, fromField) {
             final TypeAdapter<?> typeAdapter = context.getAdapter(fieldType);
 
             @SuppressWarnings({"unchecked", "rawtypes"})

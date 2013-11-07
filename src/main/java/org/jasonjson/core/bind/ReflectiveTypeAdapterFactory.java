@@ -29,6 +29,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import org.jasonjson.core.AccessStrategy;
 import org.jasonjson.core.attribute.Attribute;
+import org.jasonjson.core.attribute.FieldAttribute;
 
 /**
  * Type adapter that reflects over the fields and methods of a class.
@@ -91,11 +92,13 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
                 }
 
                 Type fieldType = $Gson$Types.resolve(type.getType(), raw, field.getDeclaredType());
-                BoundField boundField = BoundFieldFactory.createInstance(context, field, getAttributeName(field), TypeToken.get(fieldType), serialize, deserialize);
-                BoundField previous = result.put(boundField.name, boundField);
-                if (previous != null) {
+                BoundField boundField = BoundFieldFactory.createInstance(context, field, getAttributeName(field), TypeToken.get(fieldType), serialize, deserialize, (field instanceof FieldAttribute));
+
+                BoundField previous = result.get(boundField.name);
+                if(previous != null && previous.field) {
                     throw new IllegalArgumentException(declaredType + " declares multiple JSON fields named " + previous.name);
                 }
+                result.put(boundField.name, boundField);
             }
             type = TypeToken.get($Gson$Types.resolve(type.getType(), raw, raw.getGenericSuperclass()));
             raw = type.getRawType();
