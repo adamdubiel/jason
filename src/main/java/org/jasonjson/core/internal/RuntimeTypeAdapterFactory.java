@@ -225,15 +225,16 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
         }
         JsonObject jsonObject = delegate.toJsonTree(value, runtimeFilters).getAsJsonObject();
         if (jsonObject.has(typeFieldName)) {
-          throw new JsonParseException("cannot serialize " + srcType.getName()
-              + " because it already defines a field named " + typeFieldName);
+          Streams.write(jsonObject, out);
         }
-        JsonObject clone = new JsonObject();
-        clone.add(typeFieldName, new JsonPrimitive(label));
-        for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
-          clone.add(e.getKey(), e.getValue());
+        else {
+            JsonObject clone = new JsonObject();
+            clone.add(typeFieldName, new JsonPrimitive(label));
+            for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {
+                clone.add(e.getKey(), e.getValue());
+            }
+            Streams.write(clone, out);
         }
-        Streams.write(clone, out);
       }
     };
   }
