@@ -1,6 +1,5 @@
 # Jason
 ----
-[![Build Status](https://drone.io/bitbucket.org/adubiel/jason/status.png)](https://drone.io/bitbucket.org/adubiel/jason/latest)
 
 Jason is an elastic JSON serializer/deserializer based on Google Gson 2.2.4 code.
 For more on Gson visit [Google Code page](http://code.google.com/p/google-gson).
