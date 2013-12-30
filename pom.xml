@@ -10,7 +10,7 @@
 
     <groupId>org.jasonjson</groupId>
     <artifactId>jason</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <packaging>jar</packaging>
 
@@ -39,7 +39,7 @@
         <url>https://github.com/adamdubiel/jason</url>
         <connection>scm:git:git@github.com:adamdubiel/jason.git</connection>
         <developerConnection>scm:git:git@github.com:adamdubiel/jason.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>jason-0.1.0</tag>
     </scm>
 
     <properties>
