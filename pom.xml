@@ -36,9 +36,9 @@
     </developers>
 
     <scm>
-        <url>https://bitbucket.org/adubiel/jason</url>
-        <connection>scm:git:git@bitbucket.org:adubiel/jason.git</connection>
-        <developerConnection>scm:git:git@bitbucket.org:adubiel/jason.git</developerConnection>
+        <url>https://github.com/adamdubiel/jason</url>
+        <connection>scm:git:git@github.com:adamdubiel/jason.git</connection>
+        <developerConnection>scm:git:git@github.com:adamdubiel/jason.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
