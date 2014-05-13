@@ -1,5 +1,6 @@
 package org.jasonjson.core.filter;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +77,14 @@ public class AttributeExclusionFilter implements ExclusionFilter {
 
     @Override
     public boolean skipField(Type declaringType, String fieldName) {
+        Class declaringClass;
+        if(declaringType instanceof ParameterizedType) {
+            declaringClass = (Class)((ParameterizedType) declaringType).getRawType();
+        }
+        else {
+            declaringClass = (Class) declaringType;
+        }
+
         return !allow((Class) declaringType, fieldName);
     }
 
