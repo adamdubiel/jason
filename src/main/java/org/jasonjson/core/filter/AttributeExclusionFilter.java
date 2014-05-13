@@ -85,7 +85,7 @@ public class AttributeExclusionFilter implements ExclusionFilter {
             declaringClass = (Class) declaringType;
         }
 
-        return !allow((Class) declaringType, fieldName);
+        return !allow(declaringClass, fieldName);
     }
 
     @Override
